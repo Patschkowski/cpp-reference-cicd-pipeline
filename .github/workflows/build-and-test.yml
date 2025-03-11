@@ -11,6 +11,7 @@ jobs:
       - uses: sigoden/install-binary@v1
         with:
           repo: OpenCppCoverage/OpenCppCoverage
+          name: OpenCppCoverageSetup-x64-0.9.9.0.exe
       - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
