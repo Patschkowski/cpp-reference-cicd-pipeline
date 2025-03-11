@@ -1,0 +1,112 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 29
+  },
+  "configurePresets": [
+    {
+      "name": "common",
+      "hidden": true,
+      "toolchainFile": "$env{CMAKE_TOOLCHAIN_FILE}",
+      "binaryDir": "${sourceDir}/out/${presetName}",
+      "cacheVariables": {
+        "CMAKE_MODULE_PATH": "${sourceDir}/cmake",
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": "TRUE",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-win7"
+      }
+    },
+    {
+      "name": "x64-Debug-MSVC",
+      "inherits": "common",
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "enableMicrosoftCodeAnalysis": true,
+          "disableExternalAnalysis": true,
+          "enableClangTidyCodeAnalysis": false
+        }
+      },
+      "generator": "Visual Studio 17 2022",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "environment": {
+        "esp.extensions": "cppcorecheck.dll"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "/WX /W4 /EHsc /bigobj /external:anglebrackets /analyze /analyze:pluginEspXEngine.dll /analyze:external- /DEBUG"
+      }
+    },
+    {
+      "name": "x64-Release-MSVC",
+      "inherits": "common",
+      "generator": "Visual Studio 17 2022",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_FLAGS": "/WX /W4 /EHsc /bigobj /external:anglebrackets"
+      }
+    },
+    {
+      "name": "x64-Debug-Clang",
+      "inherits": "common",
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-clang-x64"
+        }
+      },
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Werror -pedantic -pedantic-errors",
+        "CMAKE_CXX_COMPILER": "$env{LLVM_PATH}/clang++.exe",
+        "CMAKE_C_COMPILER": "$env{LLVM_PATH}/clang.exe",
+        "CMAKE_CXX_EXTENSIONS": "FALSE",
+        "CMAKE_CXX_SCAN_FOR_MODULES": "TRUE",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "TRUE",
+        "CMAKE_CXX_CLANG_TIDY": "$env{LLVM_PATH}/clang-tidy.exe;-p;${sourceDir}/out/${presetName}",
+        "BUILD_DOC": "FALSE"
+      },
+      "environment": {
+        "PATH": "$env{LLVM_PATH};$penv{PATH}"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "x64-Debug-MSVC",
+      "configurePreset": "x64-Debug-MSVC",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-Release-MSVC",
+      "configurePreset": "x64-Release-MSVC",
+      "configuration": "Release"
+    },
+    {
+      "name": "x64-Debug-Clang",
+      "configurePreset": "x64-Debug-Clang",
+      "configuration": "Debug"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "x64-Debug-MSVC",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "x64-Debug-MSVC"
+        },
+        {
+          "type": "build",
+          "name": "x64-Debug-MSVC"
+        }
+      ]
+    }
+  ]
+}

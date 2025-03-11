@@ -1,0 +1,18 @@
+{
+  "name": "hello",
+  "version-string": "latest",
+  "dependencies": [
+    {
+      "name": "ms-gsl",
+      "version>=": "4.2.0"
+    },
+    {
+      "name": "boost",
+      "version>=": "1.87.0"
+    }
+  ],
+  "builtin-baseline": "e40d24cb149dd138e7c11d490834fa2c81298b32",
+  "vcpkg-configuration": {
+    "overlay-triplets": [ "./cmake" ]
+  }
+}

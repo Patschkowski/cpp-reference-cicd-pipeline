@@ -1,0 +1,11 @@
+/* Sioux color palette
+     Primary accent color: RGB(241,93,3) #F15D03
+     Text color:           RGB(0,0,0)    #000000
+*/
+html {
+    /* primary theme color. This will affect the entire websites color scheme: links, arrows, labels, ... */
+    --primary-color: #F15D03;
+    /* page base colors */
+    --page-background-color: #ffffff;
+    --page-foreground-color: #000000;
+}

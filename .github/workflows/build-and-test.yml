@@ -1,0 +1,24 @@
+name: Build and Test
+
+on:
+  push
+
+jobs:
+  build_and_test:
+    runs-on: windows-latest
+    steps:
+      - shell: cmd
+        run: which clang.exe
+      - uses: ssciwr/doxygen-install@v1.6.3
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+      - uses: lukka/run-cmake@v10
+        env:
+          CMAKE_TOOLCHAIN_FILE: "${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
+          LLVM_PATH: ""
+        with:
+          workflowPreset: 'x64-Debug-MSVC'

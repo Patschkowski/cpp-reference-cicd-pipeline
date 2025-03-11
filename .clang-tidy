@@ -1,0 +1,6 @@
+Checks: '-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,modernize-*,performance-*,portability-*,readability-*'
+WarningsAsErrors: '*'
+FormatStyle: file
+HeaderFileExtensions: ['', 'h', 'hpp']
+HeaderFilterRegex: '.*\.h??$'
+ImplementationFileExtensions: ['cpp', 'cppm']
