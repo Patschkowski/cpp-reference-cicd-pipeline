@@ -4,18 +4,11 @@ on:
   push:
 
 jobs:
-  build_and_test:
+  build-and-test:
     runs-on: windows-latest
     steps:
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1.6.3
-
-      - name: Install OpenCppCoverage
-        run: |
-          $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
-          $output = "OpenCppCoverageSetup.exe"
-          Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
 
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,7 +19,7 @@ jobs:
         uses: lukka/run-cmake@v10
         env:
           CMAKE_TOOLCHAIN_FILE: ${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: ${{ env.PROGRAMFILES}}/LLVM/bin/
+          LLVM_PATH: ${{ env.PROGRAMFILES }}/LLVM/bin/
         with:
           workflowPreset: x64-Debug-MSVC
 
@@ -34,9 +27,16 @@ jobs:
         uses: lukka/run-cmake@v10
         env:
           CMAKE_TOOLCHAIN_FILE: ${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: ${{ env.PROGRAMFILES}}/LLVM/bin/
+          LLVM_PATH: ${{ env.PROGRAMFILES }}/LLVM/bin/
         with:
           workflowPreset: x64-Debug-Clang
+          
+      - name: Install OpenCppCoverage
+        run: |
+          $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
+          $output = "OpenCppCoverageSetup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
 
       - name: Run Unit Tests
         run: >
