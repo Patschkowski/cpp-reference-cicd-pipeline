@@ -96,7 +96,7 @@
   ],
   "workflowPresets": [
     {
-      "name": "x64-Debug-MSVC",
+      "name": "x64-Debug-All",
       "steps": [
         {
           "type": "configure",
@@ -105,12 +105,7 @@
         {
           "type": "build",
           "name": "x64-Debug-MSVC"
-        }
-      ]
-    },
-    {
-      "name": "x64-Debug-Clang",
-      "steps": [
+        },
         {
           "type": "configure",
           "name": "x64-Debug-Clang"

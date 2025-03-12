@@ -4,14 +4,14 @@
   "dependencies": [
     {
       "name": "ms-gsl",
-      "version>=": "4.2.0"
+      "version>=": "4.0.0"
     },
     {
       "name": "boost",
-      "version>=": "1.86.0"
+      "version>=": "1.84.0"
     }
   ],
-  "builtin-baseline": "300239058e33420acd153135b3f6e6b187828992",
+  "builtin-baseline": "3edabbe1407e2d4d8ce5b78bab8abf42cc966d10",
   "vcpkg-configuration": {
     "overlay-triplets": [ "./cmake" ]
   }

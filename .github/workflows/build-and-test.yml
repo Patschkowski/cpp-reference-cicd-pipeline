@@ -1,4 +1,5 @@
-# TODO: Use VCPKG_INSTALLATION_ROOT
+# TODO: Use VCPKG_INSTALLATION_ROOT and PROGRAMFILES
+# TODO: Use binary caching https://devblogs.microsoft.com/cppblog/vcpkg-accelerate-your-team-development-environment-with-binary-caching-and-manifests/
 name: Build and Test
 
 on:
@@ -16,21 +17,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build (MSVC)
+      - name: Build (MSVC and Clang)
         uses: lukka/run-cmake@v10
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: ${{ env.PROGRAMFILES }}/LLVM/bin/
+          LLVM_PATH: C:/Program Files/LLVM/bin/
         with:
-          workflowPreset: x64-Debug-MSVC
-
-      - name: Build (Clang)
-        uses: lukka/run-cmake@v10
-        env:
-          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: ${{ env.PROGRAMFILES }}/LLVM/bin/
-        with:
-          workflowPreset: x64-Debug-Clang
+          workflowPreset: x64-Debug-All
           
       - name: Install OpenCppCoverage
         run: |
