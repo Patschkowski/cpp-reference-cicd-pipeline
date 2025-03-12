@@ -29,16 +29,16 @@ jobs:
         with:
           workflowPreset: x64-Debug-Clang
       - run: OpenCppCoverage |
-          --working_dir "${{ GITHUB_WORKSPACE }}/out/x64-Debug-MSVC" |
-          --export_type "cobertura:${{ GITHUB_WORKSPACE }}/out/x64-Debug-MSVC/raw_coverage.xml" |
+          --working_dir "${{ github.workspace }}/out/x64-Debug-MSVC" |
+          --export_type "cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml" |
           --cover_children |
-          --sources "${{ GITHUB_WORKSPACE }}"
+          --sources "${{ github.workspace }}"
           -- ctest -j --verbose -T Test
       - name: cppcheck
         uses: deep5050/cppcheck-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           other_options: --xml |
-              --project="${{ GITHUB_WORKSPACE }}/out/x64-Debug-MSVC/hello.sln" |
+              --project="${{ github.workspace }}/out/x64-Debug-MSVC/hello.sln" |
               --project-configuration=Debug|x64 |
               -D__cppcheck__
