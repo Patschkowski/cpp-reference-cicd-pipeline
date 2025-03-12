@@ -1,3 +1,4 @@
+# TODO: Use VCPKG_INSTALLATION_ROOT
 name: Build and Test
 
 on:
@@ -18,7 +19,7 @@ jobs:
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
         env:
-          CMAKE_TOOLCHAIN_FILE: $(VCPKG_INSTALLATION_ROOT)/scripts/buildsystems/vcpkg.cmake
+          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
           LLVM_PATH: ${{ env.PROGRAMFILES }}/LLVM/bin/
         with:
           workflowPreset: x64-Debug-MSVC
@@ -26,7 +27,7 @@ jobs:
       - name: Build (Clang)
         uses: lukka/run-cmake@v10
         env:
-          CMAKE_TOOLCHAIN_FILE: $(VCPKG_INSTALLATION_ROOT)/scripts/buildsystems/vcpkg.cmake
+          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
           LLVM_PATH: ${{ env.PROGRAMFILES }}/LLVM/bin/
         with:
           workflowPreset: x64-Debug-Clang
