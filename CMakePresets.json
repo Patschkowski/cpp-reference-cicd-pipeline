@@ -107,6 +107,19 @@
           "name": "x64-Debug-MSVC"
         }
       ]
+    },
+    {
+      "name": "x64-Debug-Clang",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "x64-Debug-Clang"
+        },
+        {
+          "type": "build",
+          "name": "x64-Debug-Clang"
+        }
+      ]
     }
   ]
 }

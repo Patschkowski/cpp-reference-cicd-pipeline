@@ -16,20 +16,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgJsonGlob: vcpkg.json
       - uses: lukka/run-cmake@v10
         env:
           CMAKE_TOOLCHAIN_FILE: "${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
           LLVM_PATH: "${{ env.PROGRAMFILES }}/LLVM/bin/"
         with:
           workflowPreset: x64-Debug-MSVC
+      - uses: lukka/run-cmake@v10
+        env:
+          CMAKE_TOOLCHAIN_FILE: "${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
+          LLVM_PATH: "${{ env.PROGRAMFILES }}/LLVM/bin/"
+        with:
+          workflowPreset: x64-Debug-Clang
+      - run: OpenCppCoverage |
+          --working_dir "${{ GITHUB_WORKSPACE }}/out/x64-Debug-MSVC" |
+          --export_type "cobertura:${{ GITHUB_WORKSPACE }}/out/x64-Debug-MSVC/raw_coverage.xml" |
+          --cover_children |
+          --sources "${{ GITHUB_WORKSPACE }}"
+          -- ctest -j --verbose -T Test
       - name: cppcheck
         uses: deep5050/cppcheck-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           other_options: --xml |
-              --project="${{ env. }}/out/x64-Debug-MSVC/hello.sln" |
-                  --project-configuration=Debug|x64 |
-                      -D__cppcheck__
+              --project="${{ GITHUB_WORKSPACE }}/out/x64-Debug-MSVC/hello.sln" |
+              --project-configuration=Debug|x64 |
+              -D__cppcheck__
