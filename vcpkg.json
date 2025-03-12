@@ -11,7 +11,7 @@
       "version>=": "1.86.0"
     }
   ],
-  "builtin-baseline": "e40d24cb149dd138e7c11d490834fa2c81298b32",
+  "builtin-baseline": "300239058e33420acd153135b3f6e6b187828992",
   "vcpkg-configuration": {
     "overlay-triplets": [ "./cmake" ]
   }
