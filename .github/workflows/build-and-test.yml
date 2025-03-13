@@ -39,6 +39,9 @@ jobs:
         with:
           workflowPreset: x64-Debug-MSVC
 
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Build (Clang)
         uses: lukka/run-cmake@v10
         env:
