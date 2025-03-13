@@ -16,7 +16,7 @@ jobs:
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1.6.3
 
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -54,7 +54,7 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile $output
           Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
 
-      - name: Run Unit Tests
+      - name: Run unit tests
         run: >
           "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe"
           --working_dir "${{ github.workspace }}/out/x64-Debug-MSVC"
