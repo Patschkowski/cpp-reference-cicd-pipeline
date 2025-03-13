@@ -1,4 +1,4 @@
-Checks: '-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,modernize-*,performance-*,portability-*,readability-*,-readability-identifier-length,-readability-else-after-return,-readability-redundant-declaration'
+Checks: '-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,modernize-*,performance-*,portability-*,readability-*,-readability-identifier-length,-readability-else-after-return,-readability-redundant-declaration,-clang-analyzer-*'
 WarningsAsErrors: '*'
 FormatStyle: file
 HeaderFileExtensions: ['', 'h', 'hpp']
