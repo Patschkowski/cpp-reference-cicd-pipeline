@@ -2,7 +2,7 @@
 #include <boost/test/included/unit_test.hpp>
 
 #ifdef _MSC_VER
-#pragma warning push
+#pragma warning(push)
 #pragma warning(disable : 26426)
 #endif
 
@@ -11,7 +11,7 @@ import hello;
 BOOST_AUTO_TEST_SUITE(libhello_tests)
 
 #ifdef _MSC_VER
-#pragma warning pop
+#pragma warning(pop)
 #endif
 
 BOOST_AUTO_TEST_CASE(say_hello_greets_name)
