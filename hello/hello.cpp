@@ -7,7 +7,7 @@
 
 import hello;
 
-int main(int argc, const char** argv)
+auto main(int argc, const char** argv) -> int
 {
   const gsl::span args(argv, argc);
 
