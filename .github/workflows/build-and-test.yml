@@ -59,12 +59,13 @@ jobs:
 
       - name: Run unit tests
         run: >
-          "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe"
-          --working_dir "${{ github.workspace }}/out/x64-Debug-MSVC"
-          --export_type "cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml"
+          Start-Process "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe"
+          -ArgumentList
+          "--working_dir \"${{ github.workspace }}/out/x64-Debug-MSVC\"
+          --export_type \"cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml\"
           --cover_children
-          --sources "${{ github.workspace }}"
-          -- ctest -j --verbose -T Test
+          --sources \"${{ github.workspace }}\"
+          -- ctest -j --verbose -T Test"
 
       - name: Analyze (cppcheck)
         uses: deep5050/cppcheck-action@main
