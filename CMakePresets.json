@@ -75,6 +75,16 @@
       "environment": {
         "PATH": "$env{LLVM_PATH};$penv{PATH}"
       }
+    },
+    {
+      "name": "x64-Debug-GCC",
+      "inherits": "common",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Werror -pedantic -pedantic-errors -fmodules",
+        "BUILD_DOC": "FALSE"
+      }
     }
   ],
   "buildPresets": [
@@ -91,6 +101,11 @@
     {
       "name": "x64-Debug-Clang",
       "configurePreset": "x64-Debug-Clang",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-Debug-GCC",
+      "configurePreset": "x64-Debug-GCC",
       "configuration": "Debug"
     }
   ],
@@ -118,6 +133,19 @@
         {
           "type": "build",
           "name": "x64-Debug-Clang"
+        }
+      ]
+    },
+    {
+      "name": "x64-Debug-GCC",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "x64-Debug-GCC"
+        },
+        {
+          "type": "build",
+          "name": "x64-Debug-GCC"
         }
       ]
     }
