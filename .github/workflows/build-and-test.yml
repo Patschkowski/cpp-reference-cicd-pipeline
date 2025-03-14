@@ -60,6 +60,7 @@ jobs:
       - name: Run unit tests
         run: >
           Start-Process "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe"
+          -Wait
           -ArgumentList
           "--working_dir `"${{ github.workspace }}/out/x64-Debug-MSVC`"
           --export_type `\cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`"
