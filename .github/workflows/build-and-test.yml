@@ -15,6 +15,23 @@ jobs:
     steps:
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1.6.3
+          
+      - name: Install OpenCppCoverage
+        run: |
+          $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
+          $output = "OpenCppCoverageSetup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
+
+      - name: Run unit tests
+        run: >
+          Start-Process "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe"
+          -ArgumentList
+          "--working_dir `"${{ github.workspace }}/out/x64-Debug-MSVC`"
+          --export_type `\cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`"
+          --cover_children
+          --sources `"${{ github.workspace }}`"
+          -- ctest -j --verbose -T Test"
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -49,23 +66,6 @@ jobs:
           LLVM_PATH: C:/Program Files/LLVM/bin/
         with:
           workflowPreset: x64-Debug-Clang
-          
-      - name: Install OpenCppCoverage
-        run: |
-          $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
-          $output = "OpenCppCoverageSetup.exe"
-          Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
-
-      - name: Run unit tests
-        run: >
-          Start-Process "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe"
-          -ArgumentList
-          "--working_dir `\"${{ github.workspace }}/out/x64-Debug-MSVC`\"
-          --export_type `\"cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`\"
-          --cover_children
-          --sources `\"${{ github.workspace }}`\"
-          -- ctest -j --verbose -T Test"
 
       - name: Analyze (cppcheck)
         uses: deep5050/cppcheck-action@main
