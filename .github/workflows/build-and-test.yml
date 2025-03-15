@@ -31,6 +31,23 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          pacboy: >-
+            toolchain:p
+            cmake:p
+
+      - name: Build (GCC)
+        shell: msys2 {0}
+        env:
+          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          LLVM_PATH: C:/Program Files/LLVM/bin/
+        run:
+          cmake --workflow x64-Debug-GCC
+
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
         env:
@@ -49,24 +66,6 @@ jobs:
           LLVM_PATH: C:/Program Files/LLVM/bin/
         with:
           workflowPreset: x64-Debug-Clang
-
-      - name: Install MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          pacboy: >-
-            toolchain:p
-            cmake:p
-            cmakerc:p
-
-      - name: Build (GCC)
-        shell: msys2 {0}
-        env:
-          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: C:/Program Files/LLVM/bin/
-        run:
-          cmake --workflow x64-Debug-GCC
           
       - name: Install OpenCppCoverage
         run: |
