@@ -61,7 +61,7 @@ jobs:
             cmakerc:p
 
       - name: Build (GCC)
-        shell: msys2 {0}
+        shell: msys2-ucrt64 {0}
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
           LLVM_PATH: C:/Program Files/LLVM/bin/
