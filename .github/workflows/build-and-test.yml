@@ -55,9 +55,10 @@ jobs:
         with:
           msystem: UCRT64
           update: true
-          install: >-
-            mingw-w64-ucrt-x86_64-cmake
-            mingw-w64-ucrt-x86_64-ninja
+          pacboy: >-
+            toolchain:p
+            cmake:p
+            ninja:p
 
       - name: Build (GCC)
         shell: msys2 {0}
