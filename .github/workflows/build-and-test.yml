@@ -58,7 +58,6 @@ jobs:
           pacboy: >-
             toolchain:p
             cmake:p
-            ninja:p
 
       - name: Build (GCC)
         shell: msys2 {0}
