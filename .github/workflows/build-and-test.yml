@@ -37,6 +37,7 @@ jobs:
           msystem: UCRT64
           update: true
           pacboy: >-
+            toolchain:p
             cmake:p
 
       - name: Debug Environment
