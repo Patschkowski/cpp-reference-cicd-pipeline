@@ -82,11 +82,9 @@
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Werror -pedantic -pedantic-errors -fmodules",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Werror -pedantic -pedantic-errors -fmodules-ts",
         "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_C_COMPILER": "gcc",
-        "CMAKE_MAKE_PROGRAM": "/usr/bin/make.exe",
-        "CMAKE_AR_PROGRAM": "/ucrt64/bin/ar.exe",
         "BUILD_DOC": "FALSE"
       }
     }
