@@ -36,6 +36,7 @@ jobs:
         with:
           msystem: UCRT64
           update: true
+          path-type: inherit
           install: >-
             make
           pacboy: >-
@@ -60,7 +61,7 @@ jobs:
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
           LLVM_PATH: C:/Program Files/LLVM/bin/
-          MSYS2_PATH_TYPE: inherit
+          # MSYS2_PATH_TYPE: inherit
         run: |
           cmake --workflow x64-Debug-GCC
 
