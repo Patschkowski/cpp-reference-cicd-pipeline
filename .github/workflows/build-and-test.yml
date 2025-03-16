@@ -38,7 +38,17 @@ jobs:
           update: true
           pacboy: >-
             toolchain:p
+            base-devel:p
             cmake:p
+
+      - name: Debug Environment
+        shell: msys2 {0}
+        run: |
+          echo "$PATH"
+          which make
+          which ar
+          make --version
+          ar --version
 
       - name: Build (GCC)
         shell: msys2 {0}
