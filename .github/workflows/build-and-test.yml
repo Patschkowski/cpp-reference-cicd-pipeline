@@ -36,17 +36,19 @@ jobs:
         with:
           msystem: UCRT64
           update: true
-          install: >-
-            make
+          # install: >-
+          #  make
           pacboy: >-
             toolchain:p
             cmake:p
+            ninja:p
 
       - name: Debug Environment
         shell: msys2 {0}
         run: |
           echo "$PATH"
           ls /ucrt64/bin
+          ls /usr/bin
           which make.exe
           which ar.exe
           make.exe --version
