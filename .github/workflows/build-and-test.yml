@@ -45,13 +45,10 @@ jobs:
         run: |
           echo "$PATH"
           ls /ucrt64/bin
-          ls /usr/local/bin
-          ls /usr/bin
-          ls /bin
-          which make
-          which ar
-          make --version
-          ar --version
+          which make.exe
+          which ar.exe
+          make.exe --version
+          ar.exe --version
 
       - name: Build (GCC)
         shell: msys2 {0}
