@@ -51,6 +51,7 @@ jobs:
           ls /usr/bin
           which make.exe
           which ar.exe
+          which ninja.exe
           make.exe --version
           ar.exe --version
 
@@ -62,7 +63,7 @@ jobs:
           # CMAKE_MAKE_PROGRAM: /usr/bin/make.exe
           # CMAKE_AR_PROGRAM: /ucrt64/bin/ar.exe
         run: |
-          export CMAKE_MAKE_PROGRAM=/usr/bin/make.exe
+          export CMAKE_MAKE_PROGRAM=/ucrt64/bin/ninja.exe
           export CMAKE_AR_PROGRAM=/ucrt64/bin/ar.exe
           cmake --workflow x64-Debug-GCC
 
