@@ -61,7 +61,7 @@ jobs:
           LLVM_PATH: C:/Program Files/LLVM/bin/
           # CMAKE_MAKE_PROGRAM: /usr/bin/make.exe
           # CMAKE_AR_PROGRAM: /ucrt64/bin/ar.exe
-        run:
+        run: |
           set CMAKE_MAKE_PROGRAM=/usr/bin/make.exe
           set CMAKE_AR_PROGRAM=/ucrt64/bin/ar.exe
           cmake --workflow x64-Debug-GCC
