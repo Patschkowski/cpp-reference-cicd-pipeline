@@ -55,11 +55,14 @@ jobs:
           ar.exe --version
 
       - name: Build (GCC)
+        shell: msys2 {0}
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
           LLVM_PATH: C:/Program Files/LLVM/bin/
+          CMAKE_MAKE_PROGRAM: /usr/bin/make.exe
+          CMAKE_AR_PROGRAM: /ucrt64/bin/ar.exe
         run:
-          msys2 -c "cmake --workflow x64-Debug-GCC"
+          cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
