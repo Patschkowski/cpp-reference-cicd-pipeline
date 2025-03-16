@@ -39,6 +39,7 @@ jobs:
           pacboy: >-
             toolchain:p
             cmake:p
+            make:p
 
       - name: Debug Environment
         shell: msys2 {0}
