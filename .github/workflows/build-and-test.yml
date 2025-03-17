@@ -35,14 +35,14 @@ jobs:
           $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
           $output = "OpenCppCoverageSetup.exe"
           Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process msiexec -ArgumentList "/package $output /quiet /norestart" -Wait
+          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait  
           
       - name: Install cppcheck
         run: |
           $url = "https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi"
           $output = "cppcheck.msi"
           Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait  
+          Start-Process msiexec -ArgumentList "/package $output /quiet /norestart" -Wait 
 
       #- name: Install MSYS2
       #  uses: msys2/setup-msys2@v2
