@@ -129,10 +129,13 @@ jobs:
           -D__cppcheck__
 
       # TODO: Filter severity
+      # cppcheck severity: error/warning/style/performance/portability/information
+      # SonarCloud type - String. One of BUG, VULNERABILITY, CODE_SMELL
+      #            severity - String. One of BLOCKER, CRITICAL, MAJOR, MINOR, INFO
       - name: Create SonarCloud issue report (cppcheck)
         run: |
           $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json"
-          "{`"issues`":[" + (Get-Content $file) + "]}" | Set-Content $file
+          "{`"issues`":[" + (Get-Content $file).Replace(":"`error`"", ":`"BLOCKER`"") + "]}" | Set-Content $file
 
       - name: Dump cppcheck results
         run: >
