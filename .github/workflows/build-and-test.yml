@@ -111,16 +111,32 @@ jobs:
         run: >
           Out-File ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml
 
-      #- name: Analyze (cppcheck)
-      #  uses: deep5050/cppcheck-action@main
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    other_options: >
-      #      --xml
-      #      --project="${{ github.workspace }}/out/x64-Debug-Clang/compile_commands.json"
-      #      --project-configuration=Debug|x64
-      #      --output-file=out/x64-Debug-Clang/cppcheck.xml
-      #      -D__cppcheck__
+      - name: Analyze (cppcheck)
+        uses: deep5050/cppcheck-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          other_options: >
+            --template="{`"engineId`": `"cppcheck`",
+                         `"ruleId`": `"{id}`",
+                         `"type`": `"CODE_SMELL`",
+                         `"severity`": `"{severity}`",
+                         `"primaryLocation`":{
+                           `"message`": `"{message}`",
+                           `"filePath`": `"{file}`",
+                           `"testRange`": {
+                             `"startLine`": {line},
+                             `"startColumn`": {column}
+                           }
+                         }}"
+            --project="${{ github.workspace }}/out/x64-Debug-Clang/compile_commands.json"
+            --project-configuration=Debug|x64
+            --library=boost.cfg
+            --output-file=out/x64-Debug-Clang/cppcheck.json
+            -D__cppcheck__
+
+      - name: Dump cppcheck results
+        run: >
+          Out-File ${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
