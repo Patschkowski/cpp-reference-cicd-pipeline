@@ -103,6 +103,14 @@ jobs:
           --sources `"${{ github.workspace }}`"
           -- ctest -j --verbose -T Test --output-junit ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml"
 
+      - name: Dump coverage
+        run: >
+          Out-File ${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml
+
+      - name: Dump test result
+        run: >
+          Out-File ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml
+
       #- name: Analyze (cppcheck)
       #  uses: deep5050/cppcheck-action@main
       #  with:
