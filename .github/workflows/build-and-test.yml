@@ -13,14 +13,6 @@ jobs:
       # restore dependencies like Boost faster.
       VCPKG_BINARY_SOURCES: clear;x-gha,readwrite
     steps:
-      - name: Install Doxygen
-        uses: ssciwr/doxygen-install@v1.6.3
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
       # Rebuilding all vcpkg dependencies at each commit is time consuming,
       # in particular when Boost is a dependency. So cache binaries.
       # https://learn.microsoft.com/en-us/vcpkg/consume/binary-caching-github-actions-cache
@@ -31,9 +23,26 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1.6.3
+
       # Needed for MSYS and vcpkg as well as for the Clang build.
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
+          
+      - name: Install OpenCppCoverage
+        run: |
+          $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
+          $output = "OpenCppCoverageSetup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Start-Process msiexec -ArgumentList "/package $output /quiet /norestart" -Wait
+          
+      - name: Install cppcheck
+        run: |
+          $url = "https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi"
+          $output = "cppcheck.msi"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait  
 
       #- name: Install MSYS2
       #  uses: msys2/setup-msys2@v2
@@ -47,6 +56,11 @@ jobs:
       #      toolchain:p
       #      cmake:p
       #      ninja:p
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       #- name: Debug Environment
       #  shell: msys2 {0}
@@ -84,13 +98,6 @@ jobs:
           LLVM_PATH: C:/Program Files/LLVM/bin/
         with:
           workflowPreset: x64-Debug-Clang
-          
-      - name: Install OpenCppCoverage
-        run: |
-          $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
-          $output = "OpenCppCoverageSetup.exe"
-          Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
 
       - name: Run unit tests
         run: >
@@ -112,27 +119,20 @@ jobs:
           Out-File ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml
 
       - name: Analyze (cppcheck)
-        uses: deep5050/cppcheck-action@main
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          other_options: >
-            --template="{`"engineId`": `"cppcheck`",
-                         `"ruleId`": `"{id}`",
-                         `"type`": `"CODE_SMELL`",
-                         `"severity`": `"{severity}`",
-                         `"primaryLocation`":{
-                           `"message`": `"{message}`",
-                           `"filePath`": `"{file}`",
-                           `"testRange`": {
-                             `"startLine`": {line},
-                             `"startColumn`": {column}
-                           }
-                         }}"
-            --project="${{ github.workspace }}/out/x64-Debug-Clang/compile_commands.json"
-            --project-configuration=Debug|x64
-            --library=boost.cfg
-            --output-file=out/x64-Debug-Clang/cppcheck.json
-            -D__cppcheck__
+        run: >
+          cppcheck.exe
+          --template="{`"engineId`":`"cppcheck`",`"ruleId`":`"{id}`",`"type`":`"CODE_SMELL`",`"severity`":`"{severity}`",`"primaryLocation`":{`"message`":`"{message}`",`"filePath`":`"{file}`",`"testRange`":{`"startLine`":{line},`"startColumn`":{column}}}}"
+          --project="${{ github.workspace }}/out/x64-Debug-Clang/compile_commands.json"
+          --project-configuration=Debug|x64
+          --library=boost.cfg
+          --output-file=out/x64-Debug-Clang/cppcheck.json
+          -D__cppcheck__
+
+      # TODO: Filter severity
+      - name: Create SonarCloud issue report (cppcheck)
+        run: |
+          $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json"
+          "{`"issues`":[" + (Get-Content $file) + "]}" | Set-Content $file
 
       - name: Dump cppcheck results
         run: >
