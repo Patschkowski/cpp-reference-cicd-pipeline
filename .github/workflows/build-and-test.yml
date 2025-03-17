@@ -35,18 +35,18 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: Install MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          # path-type: inherit
-          install: >-
-            make
-          pacboy: >-
-            toolchain:p
-            cmake:p
-            ninja:p
+      #- name: Install MSYS2
+      #  uses: msys2/setup-msys2@v2
+      #  with:
+      #    msystem: UCRT64
+      #    update: true
+      #    # path-type: inherit
+      #    install: >-
+      #      make
+      #    pacboy: >-
+      #      toolchain:p
+      #      cmake:p
+      #      ninja:p
 
       #- name: Debug Environment
       #  shell: msys2 {0}
@@ -60,14 +60,14 @@ jobs:
       #    make.exe --version
       #    ar.exe --version
 
-      - name: Build (GCC)
-        shell: msys2 {0}
-        env:
-          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: C:/Program Files/LLVM/bin/
-          MSYS2_PATH_TYPE: inherit
-        run: |
-          cmake --workflow x64-Debug-GCC
+      #- name: Build (GCC)
+      #  shell: msys2 {0}
+      #  env:
+      #    CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+      #    LLVM_PATH: C:/Program Files/LLVM/bin/
+      #    MSYS2_PATH_TYPE: inherit
+      #  run: |
+      #    cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
