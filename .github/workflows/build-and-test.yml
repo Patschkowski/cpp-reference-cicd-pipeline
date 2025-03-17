@@ -101,7 +101,7 @@ jobs:
           --export_type `\cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`"
           --cover_children
           --sources `"${{ github.workspace }}`"
-          -- ctest -j --verbose -T Test"
+          -- ctest -j --verbose -T Test --output-junit ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml"
 
       #- name: Analyze (cppcheck)
       #  uses: deep5050/cppcheck-action@main
