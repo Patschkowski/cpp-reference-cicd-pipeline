@@ -31,18 +31,22 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-      #- name: Install MSYS2
-      #  uses: msys2/setup-msys2@v2
-      #  with:
-      #    msystem: UCRT64
-      #    update: true
-      #    path-type: inherit
-      #    install: >-
-      #      make
-      #    pacboy: >-
-      #      toolchain:p
-      #      cmake:p
-      #      ninja:p
+      # Needed for MSYS and vcpkg as well as for the Clang build.
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          # path-type: inherit
+          install: >-
+            make
+          pacboy: >-
+            toolchain:p
+            cmake:p
+            ninja:p
 
       #- name: Debug Environment
       #  shell: msys2 {0}
@@ -56,14 +60,14 @@ jobs:
       #    make.exe --version
       #    ar.exe --version
 
-      #- name: Build (GCC)
-      #  shell: msys2 {0}
-      #  env:
-      #    CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-      #    LLVM_PATH: C:/Program Files/LLVM/bin/
-      #    # MSYS2_PATH_TYPE: inherit
-      #  run: |
-      #    cmake --workflow x64-Debug-GCC
+      - name: Build (GCC)
+        shell: msys2 {0}
+        env:
+          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          LLVM_PATH: C:/Program Files/LLVM/bin/
+          MSYS2_PATH_TYPE: inherit
+        run: |
+          cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
@@ -72,9 +76,6 @@ jobs:
           LLVM_PATH: C:/Program Files/LLVM/bin/
         with:
           workflowPreset: x64-Debug-MSVC
-
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Build (Clang)
         uses: lukka/run-cmake@v10
