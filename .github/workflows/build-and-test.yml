@@ -120,13 +120,15 @@ jobs:
 
       - name: Analyze (cppcheck)
         run: >
-          cppcheck.exe
-          --template="{`"engineId`":`"cppcheck`",`"ruleId`":`"{id}`",`"type`":`"CODE_SMELL`",`"severity`":`"{severity}`",`"primaryLocation`":{`"message`":`"{message}`",`"filePath`":`"{file}`",`"testRange`":{`"startLine`":{line},`"startColumn`":{column}}}}"
-          --project="${{ github.workspace }}/out/x64-Debug-Clang/compile_commands.json"
+          Start-Process "C:\Program Files\Cppcheck\cppcheck.exe"
+          -Wait
+          -ArgumentList
+          "--template=`"{`"engineId`":`"cppcheck`",`"ruleId`":`"{id}`",`"type`":`"CODE_SMELL`",`"severity`":`"{severity}`",`"primaryLocation`":{`"message`":`"{message}`",`"filePath`":`"{file}`",`"testRange`":{`"startLine`":{line},`"startColumn`":{column}}}}`"
+          --project=`"${{ github.workspace }}/out/x64-Debug-Clang/compile_commands.json`"
           --project-configuration=Debug|x64
           --library=boost.cfg
           --output-file=out/x64-Debug-Clang/cppcheck.json
-          -D__cppcheck__
+          -D__cppcheck__"
 
       # TODO: Filter severity
       # cppcheck severity: error/warning/style/performance/portability/information
