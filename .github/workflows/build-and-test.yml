@@ -179,13 +179,13 @@ jobs:
         run: |
           $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json"
           "{`"issues`":[" +
-            (Get-Content $file) `
+            ((Get-Content $file) `
               -replace ":`"error`"",":`"BLOCKER`"" `
               -replace ":`"warning`"",":`"BLOCKER`"" `
               -replace ":`"style`"",":`"MINOR`"" `
               -replace ":`"performance`"",":`"CRITICAL`"" `
               -replace ":`"portability`"",":`"MAJOR`"" `
-              -replace ":`"information`"",":`"INFO`"" +
+              -replace ":`"information`"",":`"INFO`"") +
           "]}" | Set-Content $file
 
       - name: Dump cppcheck results
