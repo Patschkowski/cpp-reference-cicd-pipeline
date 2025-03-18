@@ -137,11 +137,11 @@ jobs:
 
       - name: Dump coverage
         run: >
-          Out-File ${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml
+          Get-Content ${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml
 
       - name: Dump test result
         run: >
-          Out-File ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml
+          Get-Content ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml
 
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
@@ -179,7 +179,7 @@ jobs:
         run: |
           $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json"
           "{`"issues`":[" +
-            (Get-Content $file)
+            (Get-Content $file) `
               -replace ":`"error`"",":`"BLOCKER`"" `
               -replace ":`"warning`"",":`"BLOCKER`"" `
               -replace ":`"style`"",":`"MINOR`"" `
@@ -190,7 +190,7 @@ jobs:
 
       - name: Dump cppcheck results
         run: >
-          Out-File ${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json
+          Get-Content ${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
