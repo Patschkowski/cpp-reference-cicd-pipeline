@@ -1,5 +1,4 @@
 # TODO: Use VCPKG_INSTALLATION_ROOT and PROGRAMFILES
-# TODO: Use binary caching https://devblogs.microsoft.com/cppblog/vcpkg-accelerate-your-team-development-environment-with-binary-caching-and-manifests/
 name: Build and Test
 
 on:
@@ -40,28 +39,32 @@ jobs:
           $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
           $output = "OpenCppCoverageSetup.exe"
           Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process -FilePath $output `
-                        -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
-                        -NoNewWindow `
-                        -Wait
-          Start-Process -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
-                        -ArgumentList "--help" `
-                        -NoNewWindow `
-                        -Wait
+          Start-Process `
+            -FilePath $output `
+            -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
+            -NoNewWindow `
+            -Wait
+          Start-Process `
+            -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
+            -ArgumentList "--help" `
+            -NoNewWindow `
+            -Wait
           
       - name: Install cppcheck
         run: |
           $url = "https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi"
           $output = "cppcheck.msi"
           Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process msiexec `
-                        -ArgumentList "/package $output /quiet /norestart" `
-                        -NoNewWindow `
-                        -Wait
-          Start-Process -FilePath "C:\Program Files\Cppcheck\cppcheck.exe" `
-                        -ArgumentList "--version" `
-                        -NoNewWindow `
-                        -Wait
+          Start-Process `
+            -FilePath msiexec `
+            -ArgumentList "/package $output /quiet /norestart" `
+            -NoNewWindow `
+            -Wait
+          Start-Process `
+            -FilePath "C:\Program Files\Cppcheck\cppcheck.exe" `
+            -ArgumentList "--version" `
+            -NoNewWindow `
+            -Wait
 
       #- name: Install MSYS2
       #  uses: msys2/setup-msys2@v2
@@ -115,15 +118,22 @@ jobs:
 
       - name: Run unit tests
         run: |
-          Start-Process -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
-                        -ArgumentList "--working_dir","`"${{ github.workspace }}/out/x64-Debug-MSVC`", `
-                                      "--export_type","`"cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`", `
-                                      "--cover_children", `
-                                      "--sources","`"${{ github.workspace }}`"", `
-                                      "--","ctest","-j","--verbose","-T","Test", `
-                                      "--output-junit","`"${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml`"" `
-                        -NoNewWindow
-                        -Wait
+          $dir = "${{ github.workspace }}/out/x64-Debug-MSVC"
+          Start-Process `
+            -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
+            -ArgumentList `
+              "--working_dir", "`"$dir`"", `
+              "--export_type", "`"cobertura:$dir/raw_coverage.xml`"", `
+              "--cover_children", `
+              "--sources", "`"${{ github.workspace }}`"", `
+              "--", `
+              "ctest", `
+              "-j", `
+              "--verbose", `
+              "-T", "Test", `
+              "--output-junit", "`"$dir/test_results.xml`"" `
+            -NoNewWindow `
+            -Wait
 
       - name: Dump coverage
         run: >
@@ -136,28 +146,32 @@ jobs:
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
       - name: Analyze (cppcheck)
-        run: >
-          Start-Process "C:\Program Files\Cppcheck\cppcheck.exe"
-          -Wait
-          -ArgumentList
-          "--template=`"{`"engineId`":`"cppcheck`",
-                         `"ruleId`":`"{id}`",
-                         `"type`":`"CODE_SMELL`",
-                         `"severity`":`"{severity}`",
-                         `"primaryLocation`":{
-                           `"message`":`"{message}`",
-                           `"filePath`":`"{file}`",
-                           `"testRange`":{
-                             `"startLine`":{line},
-                             `"startColumn`":{column}
-                           }
-                         }
-                        }`"
-          --project=`"${{ github.workspace }}/out/x64-Debug-Clang/compile_commands.json`"
-          --project-configuration=Debug|x64
-          --library=boost.cfg
-          --output-file=`"${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json`"
-          -D__cppcheck__"
+        run: |
+          $dir = "${{ github.workspace }}/out/x64-Debug-Clang"
+          $template = "{`"engineId`":`"cppcheck`", `
+                         `"ruleId`":`"{id}`", `
+                         `"type`":`"CODE_SMELL`", `
+                         `"severity`":`"{severity}`", `
+                         `"primaryLocation`":{ `
+                           `"message`":`"{message}`", `
+                           `"filePath`":`"{file}`", `
+                           `"testRange`":{ `
+                             `"startLine`":{line}, `
+                             `"startColumn`":{column} `
+                           } `
+                         } `
+                        }"
+          Start-Process `
+            -FilePath "C:\Program Files\Cppcheck\cppcheck.exe" `
+            -ArgumentList `
+              "--template=`"$template`"", `
+              "--project=`"$dir/compile_commands.json`"", `
+              "--project-configuration=Debug|x64", `
+              "--library=boost.cfg", `
+              "--output-file=`"$dir/cppcheck.json`"", `
+              "-D__cppcheck__" `
+            -NoNewWindow `
+            -Wait
 
       # Make the cppcheck output compliant with SonarCloud by adding the outer JSON
       # object and converting the severities.
