@@ -40,14 +40,28 @@ jobs:
           $url = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe"
           $output = "OpenCppCoverageSetup.exe"
           Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait  
+          Start-Process -FilePath $output `
+                        -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
+                        -NoNewWindow `
+                        -Wait
+          Start-Process -FilePath `
+                        -ArgumentList "--help" `
+                        -NoNewWindow `
+                        -Wait
           
       - name: Install cppcheck
         run: |
           $url = "https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi"
           $output = "cppcheck.msi"
           Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process msiexec -ArgumentList "/package $output /quiet /norestart" -Wait 
+          Start-Process msiexec `
+                        -ArgumentList "/package $output /quiet /norestart" `
+                        -NoNewWindow `
+                        -Wait
+          Start-Process -FilePath "C:\Program Files\Cppcheck\cppcheck.exe" `
+                        -ArgumentList "--version" `
+                        -NoNewWindow `
+                        -Wait
 
       #- name: Install MSYS2
       #  uses: msys2/setup-msys2@v2
@@ -100,15 +114,16 @@ jobs:
           workflowPreset: x64-Debug-Clang
 
       - name: Run unit tests
-        run: >
-          Start-Process "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe"
-          -Wait
-          -ArgumentList
-          "--working_dir `"${{ github.workspace }}/out/x64-Debug-MSVC`"
-          --export_type `"cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`"
-          --cover_children
-          --sources `"${{ github.workspace }}`"
-          -- ctest -j --verbose -T Test --output-junit `"${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml`""
+        run: |
+          Start-Process -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
+                        -ArgumentList "--working_dir","`"${{ github.workspace }}/out/x64-Debug-MSVC`", `
+                                      "--export_type","`"cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`", `
+                                      "--cover_children", `
+                                      "--sources","`"${{ github.workspace }}`"", `
+                                      "--","ctest","-j","--verbose","-T","Test", `
+                                      "--output-junit","`"${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml`"" `
+                        -NoNewWindow
+                        -Wait
 
       - name: Dump coverage
         run: >
