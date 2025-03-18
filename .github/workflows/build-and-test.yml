@@ -105,10 +105,10 @@ jobs:
           -Wait
           -ArgumentList
           "--working_dir `"${{ github.workspace }}/out/x64-Debug-MSVC`"
-          --export_type `\cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`"
+          --export_type `"cobertura:${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml`"
           --cover_children
           --sources `"${{ github.workspace }}`"
-          -- ctest -j --verbose -T Test --output-junit ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml"
+          -- ctest -j --verbose -T Test --output-junit `"${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml`""
 
       - name: Dump coverage
         run: >
