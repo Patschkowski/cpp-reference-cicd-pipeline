@@ -44,7 +44,7 @@ jobs:
                         -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
                         -NoNewWindow `
                         -Wait
-          Start-Process -FilePath `
+          Start-Process -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
                         -ArgumentList "--help" `
                         -NoNewWindow `
                         -Wait
