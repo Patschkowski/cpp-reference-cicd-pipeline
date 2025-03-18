@@ -13,6 +13,11 @@ jobs:
       # restore dependencies like Boost faster.
       VCPKG_BINARY_SOURCES: clear;x-gha,readwrite
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
       # Rebuilding all vcpkg dependencies at each commit is time consuming,
       # in particular when Boost is a dependency. So cache binaries.
       # https://learn.microsoft.com/en-us/vcpkg/consume/binary-caching-github-actions-cache
@@ -56,11 +61,6 @@ jobs:
       #      toolchain:p
       #      cmake:p
       #      ninja:p
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       #- name: Debug Environment
       #  shell: msys2 {0}
