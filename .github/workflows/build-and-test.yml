@@ -118,6 +118,8 @@ jobs:
         run: >
           Out-File ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml
 
+      # Run the cppcheck analysis and create an output file that is partially
+      # compatible with the SonarCloud generic issue format.
       - name: Analyze (cppcheck)
         run: >
           Start-Process "C:\Program Files\Cppcheck\cppcheck.exe"
@@ -130,14 +132,17 @@ jobs:
           --output-file=out/x64-Debug-Clang/cppcheck.json
           -D__cppcheck__"
 
-      # TODO: Filter severity
-      # cppcheck severity: error/warning/style/performance/portability/information
-      # SonarCloud type - String. One of BUG, VULNERABILITY, CODE_SMELL
-      #            severity - String. One of BLOCKER, CRITICAL, MAJOR, MINOR, INFO
+      # Make the cppcheck output compliant with SonarCloud by adding the outer JSON
+      # object and converting the severities.
       - name: Create SonarCloud issue report (cppcheck)
         run: |
           $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json"
-          "{`"issues`":[" + (Get-Content $file).Replace(":`"error`"", ":`"BLOCKER`"") + "]}" | Set-Content $file
+          "{`"issues`":[" + (Get-Content $file) -replace ":`"error`"",":`"BLOCKER`"" `
+                                                -replace ":`"warning`"",":`"BLOCKER`"" `
+                                                -replace ":`"style`"",":`"MINOR`"" `
+                                                -replace ":`"performance`"",":`"CRITICAL`"" `
+                                                -replace ":`"portability`"",":`"MAJOR`"" `
+                                                -replace ":`"information`"",":`"INFO`"" + "]}" | Set-Content $file
 
       - name: Dump cppcheck results
         run: >
