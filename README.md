@@ -2,6 +2,7 @@
 
 We believe that code quality and fast software develop can go hand-in-hand when facilitated by a strong CI/CD pipeline without the need of a complex quality management system (QMS).
 
+[Build and Test](https://github.com/patschkowski/cpp-reference-cicd-pipeline/actions/workflows/build-and-test.yml/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Patschkowski_cpp-reference-cicd-pipeline&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Patschkowski_cpp-reference-cicd-pipeline)
 
 ## Folder Structure
