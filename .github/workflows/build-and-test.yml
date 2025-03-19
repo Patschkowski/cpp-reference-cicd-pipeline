@@ -3,6 +3,7 @@
 # TODO: Use behave for system-level testing
 # TODO: Use GCC
 # TODO: Fix test results parsing
+# TODO: Create commit-hook for auto-formatting
 name: Build and Test
 
 on:
@@ -122,16 +123,16 @@ jobs:
 
       - name: Run unit tests
         run: |
-          $dir = "${{ github.workspace }}/out/x64-Debug-MSVC"
+          $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
           New-Item -Path "$dir" -Name "test" -ItemType Directory
           Start-Process `
             -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
             -ArgumentList `
               "--working_dir", "`"$dir`"", `
-              "--export_type", "`"cobertura:$dir/coverage.xml`"", `
+              "--export_type", "`"cobertura:$dir\coverage.xml`"", `
               "--cover_children", `
               "--sources", "`"${{ github.workspace }}`"", `
-              "--excluded_sources", "`"$dir/vcpkg_installed/*`"", `
+              "--excluded_sources", "`"$dir\vcpkg_installed\*`"", `
               "--", `
               "ctest", `
               "-j", `
