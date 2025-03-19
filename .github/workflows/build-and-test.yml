@@ -1,4 +1,8 @@
 # TODO: Use VCPKG_INSTALLATION_ROOT and PROGRAMFILES
+# TODO: Use Infer
+# TODO: Use behave for system-level testing
+# TODO: Use GCC
+# TODO: Fix test results parsing
 name: Build and Test
 
 on:
@@ -119,29 +123,23 @@ jobs:
       - name: Run unit tests
         run: |
           $dir = "${{ github.workspace }}/out/x64-Debug-MSVC"
+          New-Item -Path "$dir" -Name "test" -ItemType Directory
           Start-Process `
             -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
             -ArgumentList `
               "--working_dir", "`"$dir`"", `
-              "--export_type", "`"cobertura:$dir/raw_coverage.xml`"", `
+              "--export_type", "`"cobertura:$dir/coverage.xml`"", `
               "--cover_children", `
               "--sources", "`"${{ github.workspace }}`"", `
+              "--excluded_sources", "`"$dir/vcpkg_installed/*`"", `
               "--", `
               "ctest", `
               "-j", `
               "--verbose", `
               "-T", "Test", `
-              "--output-junit", "`"$dir/test_results.xml`"" `
+              "--output-junit", "`"$dir/test/results.xml`"" `
             -NoNewWindow `
             -Wait
-
-      - name: Dump coverage
-        run: >
-          Get-Content ${{ github.workspace }}/out/x64-Debug-MSVC/raw_coverage.xml
-
-      - name: Dump test result
-        run: >
-          Get-Content ${{ github.workspace }}/out/x64-Debug-MSVC/test_results.xml
 
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
