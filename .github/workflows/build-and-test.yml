@@ -138,9 +138,13 @@ jobs:
               "-j", `
               "--verbose", `
               "-T", "Test", `
-              "--output-junit", "`"$dir/test/results.xml`"" `
+              "--output-junit", "`"$dir\test\results.xml`"" `
             -NoNewWindow `
             -Wait
+
+      - name: Dump test result
+        run: >
+          Get-Content ${{ github.workspace }}/out/x64-Debug-MSVC/test/results.xml
 
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
