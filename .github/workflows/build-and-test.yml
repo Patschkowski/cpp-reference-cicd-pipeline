@@ -134,7 +134,7 @@ jobs:
             -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
             -ArgumentList `
               "--working_dir", "`"$dir`"", `
-              "--export_type", "`"cobertura:$dir\unit_test_coverage.xml`"", `
+              "--export_type", "`"cobertura:$dir\unit-test-coverage.xml`"", `
               "--cover_children", `
               "--sources", "`"${{ github.workspace }}`"", `
               "--excluded_sources", "`"$dir\vcpkg_installed\*`"", `
@@ -148,12 +148,12 @@ jobs:
 
       - name: Run system tests
         run: |
-          $dir "${{ github.workspace }}\out\x64-Debug-MSVC"
+          $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
           Start-Process `
             -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
             -ArgumentList `
               "--working_dir", "`"${{ github.workspace }}\tests`"", `
-              "--export_type", "`"cobertura:$dir\system_test_coverage.xml`"", `
+              "--export_type", "`"cobertura:$dir\system-test-coverage.xml`"", `
               "--cover_children", `
               "--sources", "`"${{ github.workspace }}`"", `
               "--excluded_sources", "`"$dir\vcpkg_installed\*`"", `
@@ -167,8 +167,19 @@ jobs:
           Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Content
           Get-ChildItem -recurse "${{ github.workspace }}/out/reports" | Get-Content
 
+      - name: Convert behave's JUnit format to generic test execution report format
+        run: |
+          $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
+          $xslt.Load("${{ github.workspace }}/tests/junit-to-sonar.xsl")
+          $inputXml = New-Object System.Xml.XPath.XPathDocument("${{ github.workspace }}/out/TEST-hello.xml")
+          $outputWriter = New-Object System.Xml.XmlTextWriter("${{ github.workspace }}/out/TEST-hello.xml", $null)
+          $xslt.Transform($inputXml, $outputWriter)
+          $outputWriter.Close()
+
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
+      # This step depends on the compile commands database created by CMake for
+      # the Clang build.
       - name: Analyze (cppcheck)
         run: |
           $dir = "${{ github.workspace }}/out/x64-Debug-Clang"
@@ -192,7 +203,7 @@ jobs:
               "--project=`"$dir/compile_commands.json`"", `
               "--project-configuration=Debug|x64", `
               "--library=boost.cfg", `
-              "--output-file=`"$dir/cppcheck.json`"", `
+              "--output-file=`"$dir/cppcheck.txt`"", `
               "-D__cppcheck__" `
             -NoNewWindow `
             -Wait
@@ -201,21 +212,23 @@ jobs:
       # object and converting the severities.
       - name: Create SonarCloud issue report (cppcheck)
         run: |
-          $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json"
+          $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck"
           "{`"issues`":[" +
-            ((Get-Content $file) `
+            ((Get-Content ($file + ".txt")) `
               -replace ":`"error`"",":`"BLOCKER`"" `
               -replace ":`"warning`"",":`"BLOCKER`"" `
               -replace ":`"style`"",":`"MINOR`"" `
               -replace ":`"performance`"",":`"CRITICAL`"" `
               -replace ":`"portability`"",":`"MAJOR`"" `
               -replace ":`"information`"",":`"INFO`"") +
-          "]}" | Set-Content $file
+          "]}" | Set-Content ($file + ".json")
 
       - name: Dump cppcheck results
         run: >
           Get-Content ${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.json
-
+          
+      # This step depends on the compile commands database created by CMake for
+      # the Clang build.
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
