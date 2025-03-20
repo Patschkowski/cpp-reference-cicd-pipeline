@@ -165,7 +165,7 @@ jobs:
       - name: Dump test result
         run: |
           Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Content
-          Get-ChildItem "${{ github.workspace }}/out/TESTS-hello.xml" | Get-Content
+          Get-ChildItem -recurse "${{ github.workspace }}/out/reports" | Get-Content
 
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
