@@ -159,7 +159,7 @@ jobs:
               "--excluded_sources", "`"$dir\vcpkg_installed\*`"", `
               "--", `
               "behave" `
-            -NoNewWindow
+            -NoNewWindow `
             -Wait
 
       - name: Dump test result
