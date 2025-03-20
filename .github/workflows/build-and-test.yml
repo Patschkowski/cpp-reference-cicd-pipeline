@@ -146,10 +146,6 @@ jobs:
             -NoNewWindow `
             -Wait
 
-      - name: Dump test result
-        run: >
-          Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Content
-
       - name: Run system tests
         run: |
           $dir "${{ github.workspace }}\out\x64-Debug-MSVC"
@@ -162,9 +158,14 @@ jobs:
               "--sources", "`"${{ github.workspace }}`"", `
               "--excluded_sources", "`"$dir\vcpkg_installed\*`"", `
               "--", `
-              "behave" `
+              "behave", `
+              "--junit-directory", "$dir/Testing"
             -NoNewWindow
             -Wait
+
+      - name: Dump test result
+        run: >
+          Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Content
 
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.

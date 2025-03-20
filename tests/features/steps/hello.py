@@ -44,4 +44,4 @@ def step_impl(context):
     capture_output=True,
     text=True
   )
-  assert re.match('^Usage:\ *.*\ <name>$', result.stdout)
+  assert re.match('^Usage:\ *.*\ <name>\n$', result.stdout)
