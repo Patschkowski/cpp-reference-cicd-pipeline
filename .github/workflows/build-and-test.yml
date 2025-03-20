@@ -162,10 +162,10 @@ jobs:
             -NoNewWindow `
             -Wait
 
-      - name: Dump test result
-        run: |
-          Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Content
-          Get-ChildItem -recurse "${{ github.workspace }}/out/reports" | Get-Content
+      #- name: Dump test result
+      #  run: |
+      #    Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Childitem
+      #    Get-ChildItem -recurse "${{ github.workspace }}/out/reports" | Get-Content
 
       - name: Convert behave's JUnit format to generic test execution report format
         run: |
