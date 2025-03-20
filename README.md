@@ -11,4 +11,4 @@ The folder structure is based on [P1204R0 - Canonical Project Structure](https:/
 
 ## Naming Convention
 
-As per []() defined in the [.clang-format](.clang-format).
+As per [C++ Core Guidelines - NL: Naming and layout suggestions](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-naming) defined in the [.clang-format](.clang-format).

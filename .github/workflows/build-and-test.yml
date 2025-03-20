@@ -71,6 +71,11 @@ jobs:
             -NoNewWindow `
             -Wait
 
+      - name: Install behave
+        run: |
+          pip install behave
+          behave --version
+
       #- name: Install MSYS2
       #  uses: msys2/setup-msys2@v2
       #  with:
@@ -129,7 +134,7 @@ jobs:
             -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
             -ArgumentList `
               "--working_dir", "`"$dir`"", `
-              "--export_type", "`"cobertura:$dir\coverage.xml`"", `
+              "--export_type", "`"cobertura:$dir\unit_test_coverage.xml`"", `
               "--cover_children", `
               "--sources", "`"${{ github.workspace }}`"", `
               "--excluded_sources", "`"$dir\vcpkg_installed\*`"", `
@@ -137,13 +142,29 @@ jobs:
               "ctest", `
               "-j", `
               "--verbose", `
-              "-T", "Test", `
+              "-T", "Test" `
             -NoNewWindow `
             -Wait
 
       - name: Dump test result
         run: >
           Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Content
+
+      - name: Run system tests
+        run: |
+          $dir "${{ github.workspace }}\out\x64-Debug-MSVC"
+          Start-Process `
+            -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
+            -ArgumentList `
+              "--working_dir", "`"${{ github.workspace }}\tests`"", `
+              "--export_type", "`"cobertura:$dir\system_test_coverage.xml`"", `
+              "--cover_children", `
+              "--sources", "`"${{ github.workspace }}`"", `
+              "--excluded_sources", "`"$dir\vcpkg_installed\*`"", `
+              "--", `
+              "behave" `
+            -NoNewWindow
+            -Wait
 
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
