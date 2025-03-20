@@ -142,7 +142,8 @@ jobs:
               "ctest", `
               "-j", `
               "--verbose", `
-              "-T", "Test" `
+              "-T", "Test", `
+              "--output-junit", "${{ github.workspace }}/out/reports/ctest.xml" `
             -NoNewWindow `
             -Wait
 
@@ -164,8 +165,8 @@ jobs:
 
       - name: Dump test result
         run: |
-          Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-ChildItem
-          Get-ChildItem -recurse "${{ github.workspace }}/out/reports" | Get-ChildItem
+          Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" -File | Get-Content
+          Get-ChildItem -recurse "${{ github.workspace }}/out/reports" -File | Get-Content
 
       #- name: Convert behave's JUnit format to generic test execution report format
       #  run: |
