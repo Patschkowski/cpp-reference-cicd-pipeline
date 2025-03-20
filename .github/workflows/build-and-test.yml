@@ -167,14 +167,14 @@ jobs:
       #    Get-ChildItem -recurse "${{ github.workspace }}/out/x64-Debug-MSVC/Testing" | Get-Childitem
       #    Get-ChildItem -recurse "${{ github.workspace }}/out/reports" | Get-Content
 
-      - name: Convert behave's JUnit format to generic test execution report format
-        run: |
-          $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
-          $xslt.Load("${{ github.workspace }}/tests/junit-to-sonar.xsl")
-          $inputXml = New-Object System.Xml.XPath.XPathDocument("${{ github.workspace }}/out/TEST-hello.xml")
-          $outputWriter = New-Object System.Xml.XmlTextWriter("${{ github.workspace }}/out/TEST-hello.xml", $null)
-          $xslt.Transform($inputXml, $outputWriter)
-          $outputWriter.Close()
+      #- name: Convert behave's JUnit format to generic test execution report format
+      #  run: |
+      #    $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
+      #    $xslt.Load("${{ github.workspace }}/tests/junit-to-sonar.xsl")
+      #    $inputXml = New-Object System.Xml.XPath.XPathDocument("${{ github.workspace }}/out/reports/TEST-hello.xml")
+      #    $outputWriter = New-Object System.Xml.XmlTextWriter("${{ github.workspace }}/out/reports/TEST-hello.xml", $null)
+      #    $xslt.Transform($inputXml, $outputWriter)
+      #    $outputWriter.Close()
 
       # Run the cppcheck analysis and create an output file that is partially
       # compatible with the SonarCloud generic issue format.
