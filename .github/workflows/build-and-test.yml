@@ -163,10 +163,10 @@ jobs:
             -NoNewWindow `
             -Wait
 
-      - name: Convert behave's JUnit format to generic test execution report format
+      - name: Convert behave's JUnit format to CPPUnit format
         run: |
           $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
-          $xsltPath = "${{ github.workspace }}\tests\junit-to-sonar.xsl"
+          $xsltPath = "${{ github.workspace }}\tests\junit-to-cppunit.xsl"
           $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
           $xslt.Load($xsltPath)
           $junitFiles = Get-ChildItem -Path "$dir\*" -Include "TESTS-*.xml"
@@ -177,8 +177,6 @@ jobs:
             $outputWriter = New-Object System.Xml.XmlTextWriter($outputXmlPath, $null)
             $xslt.Transform($inputXml, $outputWriter)
             $outputWriter.Close()
-            $outputXmlPath
-            Get-Content $outputXmlPath
           }
 
       # Run the cppcheck analysis and create an output file that is partially
