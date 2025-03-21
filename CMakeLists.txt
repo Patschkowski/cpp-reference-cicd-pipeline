@@ -34,16 +34,18 @@ target_link_libraries(hello
   PRIVATE
     libhello)
 
-add_executable(libhello_tests)
-target_sources(libhello_tests
-  PRIVATE
-    "libhello/hello.test.cpp")
-target_link_libraries(libhello_tests
-  PRIVATE
-    libhello
-    Boost::unit_test_framework)
+if(BUILD_TESTING)
+  add_executable(libhello_tests)
+  target_sources(libhello_tests
+    PRIVATE
+      "libhello/hello.test.cpp")
+  target_link_libraries(libhello_tests
+    PRIVATE
+      libhello
+      Boost::unit_test_framework)
 
-add_test(libhello_tests_say_hello_greets_name libhello_tests -t "libhello_tests/say_hello_greets_name")
+  add_test(libhello_tests_say_hello_greets_name libhello_tests -t "libhello_tests/say_hello_greets_name")
+endif()
 
 if(BUILD_DOC)
   set(DOXYGEN_EXCLUDE_PATTERNS */.vs/* */cmake/* */out/* */tests/* */third_party/*)

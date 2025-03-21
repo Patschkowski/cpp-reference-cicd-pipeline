@@ -167,12 +167,12 @@ jobs:
         run: |
           $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
           $xsltPath = "${{ github.workspace }}\tests\junit-to-sonar.xsl"
+          $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
+          $xslt.Load($xsltPath)
           $junitFiles = Get-ChildItem -Path "$dir\*" -Include "TESTS-*.xml"
           New-Item -Path $dir -Name "reports" -ItemType Directory
           foreach ($inputXmlPath in $junitFiles) {
-            $outputXmlPath = Join-Path $dir (Split-Path $inputXmlPath -Leaf)
-            $xslt = New-Object System.Xml.Xsl.XslCompiledTransform
-            $xslt.Load($xsltPath)
+            $outputXmlPath = Join-Path $dir "reports" (Split-Path $inputXmlPath -Leaf)
             $inputXml = New-Object System.Xml.XPath.XPathDocument($inputXmlPath)
             $outputWriter = New-Object System.Xml.XmlTextWriter($outputXmlPath, $null)
             $xslt.Transform($inputXml, $outputWriter)
