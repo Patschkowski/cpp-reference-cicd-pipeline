@@ -177,6 +177,10 @@ jobs:
             $outputWriter = New-Object System.Xml.XmlTextWriter($outputXmlPath, $null)
             $xslt.Transform($inputXml, $outputWriter)
             $outputWriter.Close()
+            $inputXmlPath
+            Get-Content $inputXmlPath
+            $outputXmlPath
+            Get-Content $outputXmlPath
           }
 
       # Run the cppcheck analysis and create an output file that is partially
