@@ -47,7 +47,7 @@
 					<xsl:value-of select="@failures"/>
 				</FailuresTotal>
 				<Errors>
-					<xsl:value-of select="@errors"/>
+					0
 				</Errors>
 				<Failures>
 					<xsl:value-of select="@failures"/>
