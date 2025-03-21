@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.29)
 
 project(hello)
 
-option(BUILD_TEST "build tests" ON)
 option(BUILD_DOC "build documentation" ON)
 
 find_package(Microsoft.GSL CONFIG REQUIRED)
 
-if(BUILD_TEST)
+include(CTest)
+if(BUILD_TESTING)
   find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 endif()
 
@@ -34,21 +34,16 @@ target_link_libraries(hello
   PRIVATE
     libhello)
 
-if(BUILD_TEST)
-  add_executable(libhello_tests)
-  target_sources(libhello_tests
-    PRIVATE
-      "libhello/hello.test.cpp")
-  target_link_libraries(libhello_tests
-    PRIVATE
-      libhello
-      Boost::unit_test_framework)
+add_executable(libhello_tests)
+target_sources(libhello_tests
+  PRIVATE
+    "libhello/hello.test.cpp")
+target_link_libraries(libhello_tests
+  PRIVATE
+    libhello
+    Boost::unit_test_framework)
 
-  include(CTest)
-  enable_testing()
-
-  add_test(libhello_tests_say_hello_greets_name libhello_tests -t "libhello_tests/say_hello_greets_name")
-endif()
+add_test(libhello_tests_say_hello_greets_name libhello_tests -t "libhello_tests/say_hello_greets_name")
 
 if(BUILD_DOC)
   set(DOXYGEN_EXCLUDE_PATTERNS */.vs/* */cmake/* */out/* */tests/* */third_party/*)

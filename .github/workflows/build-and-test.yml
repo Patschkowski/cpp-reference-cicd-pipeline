@@ -143,7 +143,7 @@ jobs:
               "-j", `
               "--verbose", `
               "-T", "Test", `
-              "--output-junit", "$dir/TEST-ctest.xml" `
+              "--output-junit", "$dir/TESTS-ctest.xml" `
             -NoNewWindow `
             -Wait
 
@@ -167,7 +167,7 @@ jobs:
         run: |
           $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
           $xsltPath = "${{ github.workspace }}\tests\junit-to-sonar.xsl"
-          $junitFiles = Get-ChildItem -Path "$dir\*" -Include "TEST-*.xml"
+          $junitFiles = Get-ChildItem -Path "$dir\*" -Include "TESTS-*.xml"
           New-Item -Path $dir -Name "reports" -ItemType Directory
           foreach ($inputXmlPath in $junitFiles) {
             $outputXmlPath = Join-Path $dir (Split-Path $inputXmlPath -Leaf)
