@@ -114,6 +114,7 @@ jobs:
           env
           pwd
           which cmake.exe
+          cmake --version
           cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
