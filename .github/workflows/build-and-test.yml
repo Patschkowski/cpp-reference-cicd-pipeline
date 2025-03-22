@@ -87,17 +87,17 @@ jobs:
             cmake:p
             ninja:p
 
-      - name: Debug Environment
-        shell: msys2 {0}
-        run: |
-          echo "$PATH"
-          ls /ucrt64/bin
-          ls /usr/bin
-          which make.exe
-          which ar.exe
-          which ninja.exe
-          make.exe --version
-          ar.exe --version
+      #- name: Debug Environment
+      #  shell: msys2 {0}
+      #  run: |
+      #    echo "$PATH"
+      #    ls /ucrt64/bin
+      #    ls /usr/bin
+      #    which make.exe
+      #    which ar.exe
+      #    which ninja.exe
+      #    make.exe --version
+      #    ar.exe --version
 
       - name: Build (GCC)
         shell: msys2 {0}
@@ -111,6 +111,7 @@ jobs:
         run: |
           pacman -Q
           env
+          pwd
           cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
