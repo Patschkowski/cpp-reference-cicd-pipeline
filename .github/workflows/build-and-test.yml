@@ -105,6 +105,7 @@ jobs:
           VCPKG_DEFAULT_TRIPLET: x64-mingw-dynamic
           VCPKG_DEFAULT_HOST_TRIPLET: x64-mingw-dynamic
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          CMAKE_MAKE_PROGRAM: /ucrt64/bin/ninja.exe
           # LLVM_PATH: C:/Program Files/LLVM/bin/
           # MSYS2_PATH_TYPE: inherit
         run: |
