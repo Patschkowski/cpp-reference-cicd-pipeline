@@ -12,8 +12,6 @@
       "binaryDir": "${sourceDir}/out/${presetName}",
       "cacheVariables": {
         "CMAKE_MODULE_PATH": "${sourceDir}/cmake",
-        "CMAKE_CXX_STANDARD": "23",
-        "CMAKE_CXX_STANDARD_REQUIRED": "TRUE",
         "VCPKG_TARGET_TRIPLET": "x64-windows-win7"
       }
     },

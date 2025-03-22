@@ -1,6 +1,7 @@
 # TODO: Use Infer
 # TODO: Use GCC
 # TODO: Create commit-hook for auto-formatting
+# TODO: Add valgrind / etc. style of tools
 name: Build and Test
 
 on:
@@ -86,23 +87,25 @@ jobs:
             cmake:p
             ninja:p
 
-      #- name: Debug Environment
-      #  shell: msys2 {0}
-      #  run: |
-      #    echo "$PATH"
-      #    ls /ucrt64/bin
-      #    ls /usr/bin
-      #    which make.exe
-      #    which ar.exe
-      #    which ninja.exe
-      #    make.exe --version
-      #    ar.exe --version
+      - name: Debug Environment
+        shell: msys2 {0}
+        run: |
+          echo "$PATH"
+          ls /ucrt64/bin
+          ls /usr/bin
+          which make.exe
+          which ar.exe
+          which ninja.exe
+          make.exe --version
+          ar.exe --version
 
       - name: Build (GCC)
         shell: msys2 {0}
         env:
+          VCPKG_DEFAULT_TRIPLET: x64-mingw-dynamic
+          VCPKG_DEFAULT_HOST_TRIPLET: x64-mingw-dynamic
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: C:/Program Files/LLVM/bin/
+          # LLVM_PATH: C:/Program Files/LLVM/bin/
           # MSYS2_PATH_TYPE: inherit
         run: |
           cmake --workflow x64-Debug-GCC
@@ -111,7 +114,7 @@ jobs:
         uses: lukka/run-cmake@v10
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: C:/Program Files/LLVM/bin/
+          # LLVM_PATH: C:/Program Files/LLVM/bin/
         with:
           workflowPreset: x64-Debug-MSVC
 
@@ -160,7 +163,7 @@ jobs:
             -NoNewWindow `
             -Wait
 
-      - name: Convert behave's JUnit format to CPPUnit format
+      - name: Convert JUnit to CPPUnit format
         run: |
           $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
           $xsltPath = "${{ github.workspace }}\tests\junit-to-cppunit.xsl"

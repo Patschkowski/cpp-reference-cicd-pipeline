@@ -30,6 +30,9 @@ target_sources(libhello
     "${CMAKE_CURRENT_BINARY_DIR}/libhello_export.h"
   PUBLIC FILE_SET CXX_MODULES FILES
     "libhello/hello.cppm")
+target_compile_features(libhello
+  PUBLIC
+    cxx_std_23)
 target_link_libraries(libhello
   PUBLIC
     Microsoft.GSL::GSL)
