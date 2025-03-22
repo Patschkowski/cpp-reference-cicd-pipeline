@@ -76,7 +76,7 @@
     {
       "name": "x64-Debug-GCC",
       "inherits": "common",
-      "generator": "Ninja",
+      "generator": "MSYS Makefiles",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_FLAGS": "-Wall -Wextra -Werror -pedantic -pedantic-errors -fmodules-ts",
