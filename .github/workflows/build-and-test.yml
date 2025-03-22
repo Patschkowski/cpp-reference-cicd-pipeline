@@ -74,19 +74,19 @@ jobs:
           pip install behave
           behave --version
 
-      - name: Install MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-         # path-type: inherit
-          install: >-
-            make
-          pacboy: >-
-            toolchain:p
-            cmake:p
-            ninja:p
-            cmakerc:p
+      #- name: Install MSYS2
+      #  uses: msys2/setup-msys2@v2
+      #  with:
+      #    msystem: UCRT64
+      #    update: true
+      #   # path-type: inherit
+      #    install: >-
+      #      make
+      #    pacboy: >-
+      #      toolchain:p
+      #      cmake:p
+      #      ninja:p
+      #      cmakerc:p
 
       #- name: Debug Environment
       #  shell: msys2 {0}
@@ -100,22 +100,22 @@ jobs:
       #    make.exe --version
       #    ar.exe --version
 
-      - name: Build (GCC)
-        shell: msys2 {0}
-        env:
-          #VCPKG_DEFAULT_TRIPLET: x64-mingw-dynamic
-          #VCPKG_DEFAULT_HOST_TRIPLET: x64-mingw-dynamic
-          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          # CMAKE_MAKE_PROGRAM: /ucrt64/bin/ninja.exe
-          # LLVM_PATH: C:/Program Files/LLVM/bin/
-          # MSYS2_PATH_TYPE: inherit
-        run: |
-          pacman -Q
-          env
-          pwd
-          which cmake.exe
-          cmake --version
-          cmake --workflow x64-Debug-GCC
+      #- name: Build (GCC)
+      #  shell: msys2 {0}
+      #  env:
+      #    #VCPKG_DEFAULT_TRIPLET: x64-mingw-dynamic
+      #    #VCPKG_DEFAULT_HOST_TRIPLET: x64-mingw-dynamic
+      #    CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+      #    # CMAKE_MAKE_PROGRAM: /ucrt64/bin/ninja.exe
+      #    # LLVM_PATH: C:/Program Files/LLVM/bin/
+      #    # MSYS2_PATH_TYPE: inherit
+      #  run: |
+      #    pacman -Q
+      #    env
+      #    pwd
+      #    which cmake.exe
+      #    cmake --version
+      #    cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
