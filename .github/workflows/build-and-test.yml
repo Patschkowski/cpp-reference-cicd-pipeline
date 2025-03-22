@@ -86,6 +86,7 @@ jobs:
             toolchain:p
             cmake:p
             ninja:p
+            cmakerc:p
 
       #- name: Debug Environment
       #  shell: msys2 {0}
@@ -112,6 +113,7 @@ jobs:
           pacman -Q
           env
           pwd
+          which cmake.exe
           cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
