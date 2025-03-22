@@ -4,6 +4,10 @@ project(hello)
 
 option(BUILD_DOC "build documentation" ON)
 
+set(CMAKE_CXX_EXTENSIONS FALSE)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+
 find_package(Microsoft.GSL CONFIG REQUIRED)
 
 include(CTest)
@@ -15,11 +19,15 @@ if(BUILD_DOC)
   find_package(Doxygen REQUIRED)
 endif()
 
+include(GenerateExportHeader)
+
 add_library(libhello)
+generate_export_header(libhello)
 target_sources(libhello
   PRIVATE
-    "libhello/hello.cpp")
-target_sources(libhello
+    "libhello/hello.cpp"
+  PUBLIC FILE_SET HEADERS BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR} FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/libhello_export.h"
   PUBLIC FILE_SET CXX_MODULES FILES
     "libhello/hello.cppm")
 target_link_libraries(libhello

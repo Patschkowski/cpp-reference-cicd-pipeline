@@ -1,8 +1,5 @@
-# TODO: Use VCPKG_INSTALLATION_ROOT and PROGRAMFILES
 # TODO: Use Infer
-# TODO: Use behave for system-level testing
 # TODO: Use GCC
-# TODO: Fix test results parsing
 # TODO: Create commit-hook for auto-formatting
 name: Build and Test
 
@@ -76,18 +73,18 @@ jobs:
           pip install behave
           behave --version
 
-      #- name: Install MSYS2
-      #  uses: msys2/setup-msys2@v2
-      #  with:
-      #    msystem: UCRT64
-      #    update: true
-      #    # path-type: inherit
-      #    install: >-
-      #      make
-      #    pacboy: >-
-      #      toolchain:p
-      #      cmake:p
-      #      ninja:p
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+         # path-type: inherit
+          install: >-
+            make
+          pacboy: >-
+            toolchain:p
+            cmake:p
+            ninja:p
 
       #- name: Debug Environment
       #  shell: msys2 {0}
@@ -101,14 +98,14 @@ jobs:
       #    make.exe --version
       #    ar.exe --version
 
-      #- name: Build (GCC)
-      #  shell: msys2 {0}
-      #  env:
-      #    CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-      #    LLVM_PATH: C:/Program Files/LLVM/bin/
-      #    MSYS2_PATH_TYPE: inherit
-      #  run: |
-      #    cmake --workflow x64-Debug-GCC
+      - name: Build (GCC)
+        shell: msys2 {0}
+        env:
+          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          LLVM_PATH: C:/Program Files/LLVM/bin/
+          # MSYS2_PATH_TYPE: inherit
+        run: |
+          cmake --workflow x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
@@ -177,10 +174,6 @@ jobs:
             $outputWriter = New-Object System.Xml.XmlTextWriter($outputXmlPath, $null)
             $xslt.Transform($inputXml, $outputWriter)
             $outputWriter.Close()
-            $inputXmlPath
-            Get-Content $inputXmlPath
-            $outputXmlPath
-            Get-Content $outputXmlPath
           }
 
       # Run the cppcheck analysis and create an output file that is partially
