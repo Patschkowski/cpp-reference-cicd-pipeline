@@ -1,3 +1,6 @@
+/// @file
+/// Application entry point.
+
 // C++ Standard Library
 #include <cstdlib>
 #include <iostream>

@@ -1,3 +1,6 @@
+/// @file
+/// Unit tests for libhello.
+
 #define BOOST_TEST_MODULE libhello Tests
 #include <boost/test/included/unit_test.hpp>
 
