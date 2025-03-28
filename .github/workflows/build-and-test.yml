@@ -2,6 +2,11 @@
 # TODO: Use GCC
 # TODO: Create commit-hook for auto-formatting
 # TODO: Add valgrind / etc. style of tools
+# TODO: Add seahorn (export results as sarif into sonar)
+# TODO: add frama-c with clang plugin (export results as sarif into sonar)
+# TODO: use cppcheck configuration file
+# TODO: introduce msys2 via opam on the windows image as opam is also needed for infer, frama-c, offers GCC
+# TODO: Add formatting check and commit hook
 name: Build and Test
 
 on:
@@ -186,52 +191,18 @@ jobs:
             $outputWriter.Close()
           }
 
-      # Run the cppcheck analysis and create an output file that is partially
-      # compatible with the SonarCloud generic issue format.
       # This step depends on the compile commands database created by CMake for
       # the Clang build.
       - name: Analyze (cppcheck)
         run: |
-          $dir = "${{ github.workspace }}/out/x64-Debug-Clang"
-          $template = "{`"engineId`":`"cppcheck`", `
-                         `"ruleId`":`"{id}`", `
-                         `"type`":`"CODE_SMELL`", `
-                         `"severity`":`"{severity}`", `
-                         `"primaryLocation`":{ `
-                           `"message`":`"{message}`", `
-                           `"filePath`":`"{file}`", `
-                           `"testRange`":{ `
-                             `"startLine`":{line}, `
-                             `"startColumn`":{column} `
-                           } `
-                         } `
-                        }"
           Start-Process `
             -FilePath "C:\Program Files\Cppcheck\cppcheck.exe" `
             -ArgumentList `
-              "--template=`"$template`"", `
-              "--project=`"$dir/compile_commands.json`"", `
-              "--project-configuration=Debug|x64", `
-              "--library=boost.cfg", `
-              "--output-file=`"$dir/cppcheck.txt`"", `
-              "-D__cppcheck__" `
+              "--project=`"${{ github.workspace }}/hello.cppcheck`"", `
+              "--output-file=`"${{ github.workspace }}/out/x64-Debug-Clang/cppcheck.sarif`"", `
+              "--output-format=sarif" `
             -NoNewWindow `
             -Wait
-
-      # Make the cppcheck output compliant with SonarCloud by adding the outer JSON
-      # object and converting the severities.
-      - name: Create SonarCloud issue report (cppcheck)
-        run: |
-          $file = "${{ github.workspace }}/out/x64-Debug-Clang/cppcheck"
-          "{`"issues`":[" +
-            ((Get-Content ($file + ".txt")) `
-              -replace ":`"error`"",":`"BLOCKER`"" `
-              -replace ":`"warning`"",":`"BLOCKER`"" `
-              -replace ":`"style`"",":`"MINOR`"" `
-              -replace ":`"performance`"",":`"CRITICAL`"" `
-              -replace ":`"portability`"",":`"MAJOR`"" `
-              -replace ":`"information`"",":`"INFO`"") +
-          "]}" | Set-Content ($file + ".json")
           
       # This step depends on the compile commands database created by CMake for
       # the Clang build.
