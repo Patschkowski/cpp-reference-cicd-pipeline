@@ -34,7 +34,7 @@
         "esp.extensions": "cppcorecheck.dll"
       },
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "/WX /W4 /EHsc /bigobj /external:anglebrackets /analyze /analyze:pluginEspXEngine.dll /analyze:external- /DEBUG"
+        "CMAKE_CXX_FLAGS": "/WX /W4 /EHsc /bigobj /external:anglebrackets /analyze /analyze:pluginEspXEngine.dll /analyze:log \"${sourceDir}/out/${presetName}/analysis.sarif\" /analyze:external- /DEBUG"
       }
     },
     {

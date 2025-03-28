@@ -4,9 +4,8 @@
 # TODO: Add valgrind / etc. style of tools
 # TODO: Add seahorn (export results as sarif into sonar)
 # TODO: add frama-c with clang plugin (export results as sarif into sonar)
-# TODO: use cppcheck configuration file
 # TODO: introduce msys2 via opam on the windows image as opam is also needed for infer, frama-c, offers GCC
-# TODO: Add formatting check and commit hook
+# TODO: Add formatting check
 name: Build and Test
 
 on:
@@ -39,8 +38,8 @@ jobs:
         uses: ssciwr/doxygen-install@v1.6.3
 
       # Needed for MSYS and vcpkg as well as for the Clang build.
-      - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
+      #- name: Install Ninja
+      #  uses: seanmiddleditch/gha-setup-ninja@master
           
       - name: Install OpenCppCoverage
         run: |
@@ -78,32 +77,7 @@ jobs:
         run: |
           pip install behave
           behave --version
-
-      #- name: Install MSYS2
-      #  uses: msys2/setup-msys2@v2
-      #  with:
-      #    msystem: UCRT64
-      #    update: true
-      #   # path-type: inherit
-      #    install: >-
-      #      make
-      #    pacboy: >-
-      #      toolchain:p
-      #      cmake:p
-      #      ninja:p
-      #      cmakerc:p
-
-      #- name: Debug Environment
-      #  shell: msys2 {0}
-      #  run: |
-      #    echo "$PATH"
-      #    ls /ucrt64/bin
-      #    ls /usr/bin
-      #    which make.exe
-      #    which ar.exe
-      #    which ninja.exe
-      #    make.exe --version
-      #    ar.exe --version
+          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.exe" --version
 
       #- name: Build (GCC)
       #  shell: msys2 {0}
