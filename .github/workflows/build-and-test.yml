@@ -62,7 +62,7 @@ jobs:
           behave --version
 
       - name: Build (GCC)
-        shell: msys2bash.cmd
+        shell: C:\msys64\usr\bin\bash.exe {0}
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         run: |
