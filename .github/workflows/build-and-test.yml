@@ -62,12 +62,13 @@ jobs:
           behave --version
 
       - name: Build (GCC)
-        shell: C:\msys64\usr\bin\bash.exe {0}
+        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 {0}
         env:
+          MSYSTEM: UCRT64
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         run: |
-          /c/msys64/usr/bin/pacman -Q
-          /c/msys64/usr/bin/printenv
+          pacman -Q
+          printenv
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
