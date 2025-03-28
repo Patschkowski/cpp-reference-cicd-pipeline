@@ -67,8 +67,7 @@ jobs:
           MSYSTEM: UCRT64
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         run: |
-          pacman -Q
-          printenv
+          cmake --workflow --preset x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
