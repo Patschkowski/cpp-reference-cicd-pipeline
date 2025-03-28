@@ -66,7 +66,7 @@ jobs:
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         run: |
-          pacman -Q
+          /c/msys64/usr/bin/pacman -Q
 
       #- name: Build (GCC)
       #  shell: msys2 {0}
