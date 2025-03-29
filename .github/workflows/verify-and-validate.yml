@@ -1,32 +1,63 @@
 # TODO: Use Infer
-# TODO: Use GCC
 # TODO: Create commit-hook for auto-formatting
 # TODO: Add valgrind / etc. style of tools
 # TODO: Add seahorn (export results as sarif into sonar)
 # TODO: add frama-c with clang plugin (export results as sarif into sonar)
 # TODO: introduce msys2 via opam on the windows image as opam is also needed for infer, frama-c, offers GCC
 # TODO: Add formatting check
-name: Build and Test
-
-on:
-  push:
+name: Verify and Validate
+on: push
+env:
+  # Needed by vcpkg to find the binary cache and
+  # restore dependencies like Boost faster.
+  VCPKG_BINARY_SOURCES: clear;x-gha,readwrite
 
 jobs:
-  build-and-test:
+  build-with-gcc:
     runs-on: windows-latest
-    env:
-      # Needed by vcpkg to find the binary cache and
-      # restore dependencies like Boost faster.
-      VCPKG_BINARY_SOURCES: clear;x-gha,readwrite
+    steps:
+      # No need to check out the submodule as Doxygen documentation is not
+      # built.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Rebuilding all vcpkg dependencies at each commit is time consuming,
+      # in particular when Boost is a dependency. So cache binaries.
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      # Module dependency scanning support in CMake requires GCC 14+
+      - name: Update GCC
+        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 {0}
+        env:
+          MSYSTEM: UCRT64
+        run: |
+          pacman -S --noconfirm pactoys
+          pacboy -S --noconfirm toolchain:p
+          gcc --version
+
+      # Use full path for MSYS2 to use the CMake of MSVC as MSYS2's CMake
+      # fails to compile sqlite3.
+      - name: Build (GCC)
+        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 -use-full-path {0}
+        env:
+          MSYSTEM: UCRT64
+          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+        run: |
+          cmake --workflow --preset x64-Debug-GCC
+
+  build-with-msvc-and-run-tests:
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      # Rebuilding all vcpkg dependencies at each commit is time consuming,
-      # in particular when Boost is a dependency. So cache binaries.
-      # https://learn.microsoft.com/en-us/vcpkg/consume/binary-caching-github-actions-cache
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v7
         with:
@@ -39,45 +70,11 @@ jobs:
           
       - name: Install OpenCppCoverage
         uses: KungFuDonkey/Install-OpenCppCoverage@v1
-          
-      - name: Install cppcheck
-        run: |
-          $url = "https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi"
-          $output = "cppcheck.msi"
-          Invoke-WebRequest -Uri $url -OutFile $output
-          Start-Process `
-            -FilePath msiexec `
-            -ArgumentList "/package $output /quiet /norestart" `
-            -NoNewWindow `
-            -Wait
-          Start-Process `
-            -FilePath "C:\Program Files\Cppcheck\cppcheck.exe" `
-            -ArgumentList "--version" `
-            -NoNewWindow `
-            -Wait
 
       - name: Install behave
         run: |
           pip install behave
           behave --version
-
-      # Module dependency scanning support in CMake requires GCC 14+
-      - name: Update GCC
-        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 {0}
-        env:
-          MSYSTEM: UCRT64
-        run: |
-          pacman -S --noconfirm pactoys
-          pacboy -S --noconfirm toolchain:p
-          gcc --version
-
-      - name: Build (GCC)
-        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 -use-full-path {0}
-        env:
-          MSYSTEM: UCRT64
-          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-        run: |
-          cmake --workflow --preset x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
@@ -85,15 +82,7 @@ jobs:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         with:
           workflowPreset: x64-Debug-MSVC
-
-      - name: Build (Clang)
-        uses: lukka/run-cmake@v10
-        env:
-          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          LLVM_PATH: C:/Program Files/LLVM/bin/
-        with:
-          workflowPreset: x64-Debug-Clang
-
+          
       - name: Run unit tests
         run: |
           $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
@@ -147,6 +136,54 @@ jobs:
             $outputWriter.Close()
           }
 
+      - name: Save test, coverage and analysis results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage-and-analysis-results
+          retention-days: 1
+          path: |
+            ${{ github.workspace }}\out\x64-Debug-MSVC\reports\TESTS-*.xml
+            ${{ github.workspace }}\out\x64-Debug-MSVC\unit-test-coverage.xml
+            ${{ github.workspace }}\out\x64-Debug-MSVC\system-test-coverage.xml
+            ${{ github.workspace }}\out\x64-Debug-MSVC\msvc.sarif
+
+  build-with-clang-and-analyze:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+          
+      - name: Install cppcheck
+        run: |
+          $url = "https://github.com/danmar/cppcheck/releases/download/2.17.1/cppcheck-2.17.1-x64-Setup.msi"
+          $output = "cppcheck.msi"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Start-Process `
+            -FilePath msiexec `
+            -ArgumentList "/package $output /quiet /norestart" `
+            -NoNewWindow `
+            -Wait
+          Start-Process `
+            -FilePath "C:\Program Files\Cppcheck\cppcheck.exe" `
+            -ArgumentList "--version" `
+            -NoNewWindow `
+            -Wait
+
+      - name: Build (Clang)
+        uses: lukka/run-cmake@v10
+        env:
+          CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          LLVM_PATH: C:/Program Files/LLVM/bin/
+        with:
+          workflowPreset: x64-Debug-Clang
+
       # This step depends on the compile commands database created by CMake for
       # the Clang build.
       - name: Analyze (cppcheck)
@@ -159,6 +196,28 @@ jobs:
               "--output-format=sarif" `
             -NoNewWindow `
             -Wait
+
+      - name: Save compile commands database and analysis results
+        uses: actions/upload-artifact@v4
+        with:
+          name: compile-command-database-and-analysis-results
+          retention-days: 1
+          path: |
+            ${{ github.workspace }}\out\x64-Debug-Clang\compile_commands.json
+            ${{ github.workspace }}\out\x64-Debug-Clang\cppcheck.sarif
+
+  quality-gate:
+    runs-on: windows-latest
+    needs:
+      - build-with-gcc
+      - build-with-msvc-and-run-tests
+      - build-with-clang-and-analyze
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore compile commands database, test, coverage and analysis results
+        uses: actions/download-artifact@v4
           
       # This step depends on the compile commands database created by CMake for
       # the Clang build.
