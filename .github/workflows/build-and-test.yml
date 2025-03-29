@@ -66,11 +66,9 @@ jobs:
         env:
           MSYSTEM: UCRT64
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-        #run: |
-        #  pacman -S --noconfirm pactoys
-        #  pacboy -S --noconfirm cmake:p
         run: |
-          pacman -Suy --noconfirm
+          pacman -S --noconfirm pactoys
+          pacboy -S --noconfirm toolchain:p
           cmake --version
           gcc --version
           which cmake
