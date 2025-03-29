@@ -203,6 +203,7 @@ jobs:
           retention-days: 1
           path: |
             ${{ github.workspace }}\out\x64-Debug-Clang\compile_commands.json
+            ${{ github.workspace }}\out\x64-Debug-Clang\CMakeFiles\*.dir\**
             ${{ github.workspace }}\out\x64-Debug-Clang\cppcheck.sarif
 
   quality-gate:
