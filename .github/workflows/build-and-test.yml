@@ -69,6 +69,8 @@ jobs:
         run: |
           pacman -S --noconfirm pactoys
           pacboy -S --noconfirm cmake:p
+          cmake --version
+          which cmake
           cmake --workflow --preset x64-Debug-GCC
 
       - name: Build (MSVC)
