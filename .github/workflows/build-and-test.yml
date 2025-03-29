@@ -62,13 +62,14 @@ jobs:
           behave --version
 
       - name: Build (GCC)
-        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 {0}
+        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 -use-full-path {0}
         env:
           MSYSTEM: UCRT64
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+        #run: |
+        #  pacman -S --noconfirm pactoys
+        #  pacboy -S --noconfirm cmake:p
         run: |
-          pacman -S --noconfirm pactoys
-          pacboy -S --noconfirm cmake:p
           cmake --version
           which cmake
           cmake --workflow --preset x64-Debug-GCC
