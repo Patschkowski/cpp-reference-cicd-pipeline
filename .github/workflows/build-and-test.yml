@@ -71,6 +71,7 @@ jobs:
         #  pacboy -S --noconfirm cmake:p
         run: |
           cmake --version
+          gcc --version
           which cmake
           cmake --workflow --preset x64-Debug-GCC
 
