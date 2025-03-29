@@ -3,7 +3,6 @@
 # TODO: Add valgrind / etc. style of tools
 # TODO: Add seahorn (export results as sarif into sonar)
 # TODO: add frama-c with clang plugin (export results as sarif into sonar)
-# TODO: introduce msys2 via opam on the windows image as opam is also needed for infer, frama-c, offers GCC
 # TODO: Add formatting check
 name: Verify and Validate
 on: push
@@ -50,7 +49,7 @@ jobs:
         run: |
           cmake --workflow --preset x64-Debug-GCC
 
-  build-with-msvc-and-run-tests:
+  build-with-msvc-and-test:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -209,17 +208,23 @@ jobs:
   quality-gate:
     runs-on: windows-latest
     needs:
-      - build-with-gcc
-      - build-with-msvc-and-run-tests
+      - build-with-msvc-and-test
       - build-with-clang-and-analyze
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Restore compile commands database, test, coverage and analysis results
+      - name: Restore test, coverage and analysis results
         uses: actions/download-artifact@v4
         with:
-          merge-multiple: true
+          name: test-coverage-and-analysis-results
+          path: ${{ github.workspace }}/out/x64-Debug-MSVC
+
+      - name: Restore compile commands database and analysis results
+        uses: actions/download-artifact@v4
+        with:
+          name: compile-command-database-and-analysis-results
+          path: ${{ github.workspace }}/out/x64-Debug-Clang
           
       # This step depends on the compile commands database
       # created by CMake for the Clang build.
