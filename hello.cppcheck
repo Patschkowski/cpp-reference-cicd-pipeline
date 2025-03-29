@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="1">
-    <builddir>out/x64-Debug-Clang/cppcheck</builddir>
+    <builddir>out/x64-Debug-Clang</builddir>
     <importproject>out/x64-Debug-Clang/compile_commands.json</importproject>
     <analyze-all-vs-configs>false</analyze-all-vs-configs>
     <check-headers>true</check-headers>

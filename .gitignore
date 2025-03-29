@@ -1,7 +1,7 @@
 # Visual Studio [Code]
-out
 .vs
 .vscode
 *.nativecodeanalysis.xml
 *.pdb
+out
 tests/reports/*

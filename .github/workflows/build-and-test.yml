@@ -61,24 +61,28 @@ jobs:
           pip install behave
           behave --version
 
+      # Module dependency scanning support in CMake requires GCC 14+
+      - name: Update GCC
+        shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 {0}
+        env:
+          MSYSTEM: UCRT64
+        run: |
+          pacman -S --noconfirm pactoys
+          pacboy -S --noconfirm toolchain:p
+          gcc --version
+
       - name: Build (GCC)
         shell: C:\msys64\msys2_shell.cmd -defterm -here -no-start -ucrt64 -use-full-path {0}
         env:
           MSYSTEM: UCRT64
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         run: |
-          pacman -S --noconfirm pactoys
-          pacboy -S --noconfirm toolchain:p
-          cmake --version
-          gcc --version
-          which cmake
           cmake --workflow --preset x64-Debug-GCC
 
       - name: Build (MSVC)
         uses: lukka/run-cmake@v10
         env:
           CMAKE_TOOLCHAIN_FILE: C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          # LLVM_PATH: C:/Program Files/LLVM/bin/
         with:
           workflowPreset: x64-Debug-MSVC
 
