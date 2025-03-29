@@ -218,6 +218,8 @@ jobs:
 
       - name: Restore compile commands database, test, coverage and analysis results
         uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
           
       # This step depends on the compile commands database
       # created by CMake for the Clang build.
