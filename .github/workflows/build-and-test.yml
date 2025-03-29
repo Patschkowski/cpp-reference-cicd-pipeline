@@ -92,7 +92,7 @@ jobs:
           $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
           New-Item -Path "$dir" -Name "test" -ItemType Directory
           Start-Process `
-            -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
+            -FilePath "OpenCppCoverage.exe" `
             -ArgumentList `
               "--working_dir", "`"$dir`"", `
               "--export_type", "`"cobertura:$dir\unit-test-coverage.xml`"", `
@@ -112,7 +112,7 @@ jobs:
         run: |
           $dir = "${{ github.workspace }}\out\x64-Debug-MSVC"
           Start-Process `
-            -FilePath "C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe" `
+            -FilePath "OpenCppCoverage.exe" `
             -ArgumentList `
               "--working_dir", "`"${{ github.workspace }}\tests`"", `
               "--export_type", "`"cobertura:$dir\system-test-coverage.xml`"", `
