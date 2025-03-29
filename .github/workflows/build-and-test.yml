@@ -70,6 +70,7 @@ jobs:
         #  pacman -S --noconfirm pactoys
         #  pacboy -S --noconfirm cmake:p
         run: |
+          pacman -Suy --noconfirm
           cmake --version
           gcc --version
           which cmake
