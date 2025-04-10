@@ -67,7 +67,7 @@
         "CMAKE_CXX_SCAN_FOR_MODULES": "TRUE",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "TRUE",
         "CMAKE_CXX_CLANG_TIDY": "$env{LLVM_PATH}/clang-tidy.exe;-p;${sourceDir}/out/${presetName}",
-        "CMAKE_CXX_CPPCHECK": "$env{CPPCHECK_PATH}/cppcheck.exe;--output-file=\"${sourceDir}/out/${presetName}/cppcheck.sarif\";--output-format=sarif;--cppcheck-build-dir=\"${sourceDir}/out/${presetName}\";-D__cppcheck__;-iout/;-ithird_party/;--library=std;--library=boost",
+        "CMAKE_CXX_CPPCHECK": "$env{CPPCHECK_PATH}/cppcheck.exe;--output-file=\"${sourceDir}/out/${presetName}/cppcheck.sarif\";--output-format=sarif;--cppcheck-build-dir=\"${sourceDir}/out\";-D__cppcheck__;-iout/;-ithird_party/;--library=std;--library=boost",
         "BUILD_DOC": "FALSE"
       },
       "environment": {
