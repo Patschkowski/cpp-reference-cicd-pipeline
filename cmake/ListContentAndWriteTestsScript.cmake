@@ -8,10 +8,10 @@ execute_process(
   ERROR_VARIABLE CONTENT
 )
 
-if(RESULT EQUAL 0)
-  # Remove the last line break and turn content into list of lines.
-  string(STRIP "${CONTENT}" CONTENT)
+if(NOT RESULT)
+  # Turn content into list of lines and remove the last empty line.
   string(REPLACE "\n" ";" LINES "${CONTENT}")
+  list(POP_BACK LINES)
 
   # Count the indents in each line.
   set(INDENT_LEVELS "")
@@ -24,7 +24,6 @@ if(RESULT EQUAL 0)
     math(EXPR INDENT_LEVEL "${SPACE_COUNT} / 4")
     list(APPEND INDENT_LEVELS ${INDENT_LEVEL})
     list(APPEND SUITES_AND_TESTS ${SUITE_OR_TEST})
-    message(STATUS "indent: ${INDENT_LEVEL}, test-or-suite: ${SUITE_OR_TEST}")
   endforeach()
 
   list(LENGTH SUITES_AND_TESTS COUNT)
@@ -39,8 +38,6 @@ if(RESULT EQUAL 0)
 
       list(SUBLIST STACK 0 ${CURRENT_INDENT} STACK)
       list(APPEND STACK ${SUITE_OR_TEST})
-
-      message(STATUS "${IDX} => ${SUITE_OR_TEST} : ${STACK}")
 
       # Leaves are either the last item in the list or the
       # next item has the same indentation as the current.
