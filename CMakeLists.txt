@@ -20,6 +20,7 @@ if(BUILD_DOC)
 endif()
 
 include(GenerateExportHeader)
+include(BoostTestDiscoverTests)
 
 add_library(libhello)
 generate_export_header(libhello)
@@ -55,7 +56,7 @@ if(BUILD_TESTING)
       libhello
       Boost::unit_test_framework)
 
-  add_test(libhello_tests_say_hello_greets_name libhello_tests -t "libhello_tests/say_hello_greets_name")
+  boosttest_discover_tests(libhello_tests)
 endif()
 
 if(BUILD_DOC)
