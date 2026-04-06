@@ -8,6 +8,9 @@ execute_process(
   ERROR_VARIABLE CONTENT
 )
 
+message(STATUS "Content of ${EXE} --list_content:\n${CONTENT}")
+message(STATUS "Result of ${EXE} --list_content: ${RESULT}")
+
 if(NOT RESULT)
   # Turn content into list of lines and remove the last empty line.
   string(REPLACE "\n" ";" LINES "${CONTENT}")
