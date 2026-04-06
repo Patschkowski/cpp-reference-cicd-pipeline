@@ -8,25 +8,24 @@ execute_process(
   ERROR_VARIABLE CONTENT
 )
 
-message(STATUS "Content of ${EXE} --list_content:\n${CONTENT}")
-message(STATUS "Result of ${EXE} --list_content: ${RESULT}")
-
 if(NOT RESULT)
-  # Turn content into list of lines and remove the last empty line.
+  # Turn content into list of lines. One to two empty lines will be created by
+  # that depending on how the platform handles the output of the process.
   string(REPLACE "\n" ";" LINES "${CONTENT}")
-  list(POP_BACK LINES)
 
   # Count the indents in each line.
   set(INDENT_LEVELS "")
   set(SUITES_AND_TESTS "")
   foreach(LINE IN LISTS LINES)
-    string(REGEX MATCH "^[ ]*" SPACES "${LINE}")
-    string(LENGTH "${SPACES}" SPACE_COUNT)
-    string(REGEX REPLACE "(\\*|([* ]:.*))$" "" SUITE_OR_TEST_WITH_INDENTS "${LINE}")
-    string(STRIP "${SUITE_OR_TEST_WITH_INDENTS}" SUITE_OR_TEST)
-    math(EXPR INDENT_LEVEL "${SPACE_COUNT} / 4")
-    list(APPEND INDENT_LEVELS ${INDENT_LEVEL})
-    list(APPEND SUITES_AND_TESTS ${SUITE_OR_TEST})
+    if(NOT LINE STREQUAL "")
+      string(REGEX MATCH "^[ ]*" SPACES "${LINE}")
+      string(LENGTH "${SPACES}" SPACE_COUNT)
+      string(REGEX REPLACE "(\\*|([* ]:.*))$" "" SUITE_OR_TEST_WITH_INDENTS "${LINE}")
+      string(STRIP "${SUITE_OR_TEST_WITH_INDENTS}" SUITE_OR_TEST)
+      math(EXPR INDENT_LEVEL "${SPACE_COUNT} / 4")
+      list(APPEND INDENT_LEVELS ${INDENT_LEVEL})
+      list(APPEND SUITES_AND_TESTS ${SUITE_OR_TEST})
+    endif()
   endforeach()
 
   list(LENGTH SUITES_AND_TESTS COUNT)
