@@ -64,6 +64,8 @@ jobs:
 
   build-with-msvc-and-test:
     runs-on: windows-latest
+    needs:
+      - perform-pre-commit-checks
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
