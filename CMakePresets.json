@@ -25,7 +25,7 @@
           "enableClangTidyCodeAnalysis": false
         }
       },
-      "generator": "Visual Studio 17 2022",
+      "generator": "Visual Studio 18 2026",
       "architecture": {
         "value": "x64",
         "strategy": "set"
@@ -40,7 +40,7 @@
     {
       "name": "x64-Release-MSVC",
       "inherits": "common",
-      "generator": "Visual Studio 17 2022",
+      "generator": "Visual Studio 18 2026",
       "architecture": {
         "value": "x64",
         "strategy": "set"
