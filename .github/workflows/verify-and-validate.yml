@@ -1,9 +1,7 @@
 # TODO: Use Infer
-# TODO: Create commit-hook for auto-formatting
 # TODO: Add valgrind / etc. style of tools
 # TODO: Add seahorn (export results as sarif into sonar)
 # TODO: add frama-c with clang plugin (export results as sarif into sonar)
-# TODO: Add formatting check
 # TODO: Mixed C++ and C# projects
 # TODO: Save and restore the cppcheck analysis results from cppcheck-build-dir
 name: Verify and Validate
