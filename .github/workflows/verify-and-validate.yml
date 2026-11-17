@@ -13,7 +13,8 @@ env:
 
 jobs:
   perform-pre-commit-checks:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    container: ghcr.io/patschkowski/fedora_cpp_ci:latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
